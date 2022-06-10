@@ -1,0 +1,123 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'kotlin-parcelize'
+//    id 'com.google.firebase.crashlytics'
+}
+
+static String getKeystorePath() {
+    if (Os.isFamily(Os.FAMILY_WINDOWS)) return "c:/Keystore/hold"
+    if (Os.isFamily(Os.FAMILY_MAC)) return "${System.properties['user.home']}/Keystore/hold"
+    return System.getenv("HEAVYE_KEYSTORE_PATH")
+}
+def computeVersionName() {
+    return "${rootProject.version_major}.${rootProject.version_minor}.${rootProject.version_patch}"
+}
+
+def computeVersionCode() {
+    return rootProject.version_major * 10000 + rootProject.version_minor * 1000 + rootProject.version_patch * 100 + rootProject.build_number
+}
+
+
+
+android {
+    compileSdkVersion rootProject.compile_sdk
+
+    compileSdk 31
+
+    defaultConfig {
+        applicationId "com.hold"
+        minSdkVersion rootProject.min_sdk
+        targetSdkVersion rootProject.target_sdk
+        versionCode computeVersionCode()
+        versionName computeVersionName()
+
+        signingConfigs {
+            debug_config {
+                try {
+                    keyAlias KEY_ALIAS
+                    keyPassword KEY_PASSWORD
+                    storeFile file(getKeystorePath())
+                    storePassword KEYSTORE_PASSWORD
+                } catch (ignored) {
+                    throw new InvalidUserDataException("You should define KEYSTORE_PASSWORD and KEY_PASSWORD in gradle.properties.")
+                }
+            }
+            default_config {
+                try {
+                    keyAlias KEY_ALIAS
+                    keyPassword KEY_PASSWORD
+                    storeFile file(getKeystorePath())
+                    storePassword KEYSTORE_PASSWORD
+                } catch (ignored) {
+                    throw new InvalidUserDataException("You should define KEYSTORE_PASSWORD and KEY_PASSWORD in gradle.properties.")
+                }
+            }
+        }
+
+
+    }
+
+    buildTypes {
+        sandbox {
+            minifyEnabled false
+            debuggable true
+            signingConfig signingConfigs.default_config
+        }
+
+        production {
+            minifyEnabled true
+            debuggable false
+            signingConfig signingConfigs.default_config
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = '11'
+    }
+    packagingOptions {
+        resources.excludes.add("META-INF/*")
+    }
+
+    buildFeatures {
+        compose true
+        viewBinding true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.2.0-beta03"
+    }
+}
+
+
+apply from: '../dependencies.gradle'
+
+dependencies {
+    androidX()
+    retrofit()
+    google()
+    rxJava()
+    paging()
+    koin()
+    nav()
+    adapterDelegates()
+    firebase()
+
+    okhttp()
+    glide()
+    compression()
+    jetpackCompose()
+
+    // Timber
+    implementation 'com.jakewharton.timber:timber:4.7.1'
+    implementation 'com.facebook.shimmer:shimmer:0.5.0'
+    implementation 'com.redmadrobot:input-mask-android:6.0.0'
+    api project(":app:arch")
+}

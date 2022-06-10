@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Hold</string>
+
+
+    <string name="achievements">Достижения</string>
+    <string name="my_records">Мои рекорды</string>
+    <string name="world_records">Мировой рейтинг</string>
+
+</resources>

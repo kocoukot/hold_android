@@ -1,0 +1,49 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+}
+
+android {
+    compileSdkVersion rootProject.compile_sdk
+
+    defaultConfig {
+        minSdkVersion rootProject.min_sdk
+        targetSdkVersion rootProject.target_sdk
+
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+        }
+        sandbox {
+            minifyEnabled false
+        }
+        production {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = '11'
+    }
+    buildFeatures {
+        viewBinding true
+    }
+}
+
+apply from: '../../dependencies.gradle'
+
+dependencies {
+    androidX()
+    rxJava()
+
+    // Timber
+    implementation 'com.jakewharton.timber:timber:4.7.1'
+}
