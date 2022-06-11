@@ -10,6 +10,7 @@ object DateUtil {
 
 
     fun getRecordDate(recordDate: Long): String = dateFormatter.format(Date(recordDate))
+
     fun getRecordResult(recordResult: Long): String {
         val hours = recordResult / 3600000
         val minutes = (recordResult % 3600000) / 60000

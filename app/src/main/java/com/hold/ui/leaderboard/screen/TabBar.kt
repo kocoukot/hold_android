@@ -75,12 +75,8 @@ private fun RecordTabIndicator(
     val indicatorLeft by transition.animateDp(
         transitionSpec = {
             if (RecordType.PERSONAL isTransitioningTo RecordType.GLOBAL) {
-                // Indicator moves to the right.
-                // Low stiffness spring for the left edge so it moves slower than the right edge.
                 spring(stiffness = Spring.StiffnessMedium)
             } else {
-                // Indicator moves to the left.
-                // Medium stiffness spring for the left edge so it moves faster than the right edge.
                 spring(stiffness = Spring.StiffnessHigh)
             }
         },
@@ -92,12 +88,8 @@ private fun RecordTabIndicator(
     val indicatorRight by transition.animateDp(
         transitionSpec = {
             if (RecordType.PERSONAL isTransitioningTo RecordType.GLOBAL) {
-                // Indicator moves to the right
-                // Medium stiffness spring for the right edge so it moves faster than the left edge.
                 spring(stiffness = Spring.StiffnessHigh)
             } else {
-                // Indicator moves to the left.
-                // Low stiffness spring for the right edge so it moves slower than the left edge.
                 spring(stiffness = Spring.StiffnessMedium)
             }
         },
@@ -112,7 +104,6 @@ private fun RecordTabIndicator(
             .wrapContentSize(align = Alignment.BottomStart)
             .offset(x = indicatorLeft)
             .width(indicatorRight - indicatorLeft)
-            .padding(4.dp)
             .fillMaxSize()
             .background(
                 HTheme.colors.primaryBlue,

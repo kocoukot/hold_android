@@ -28,6 +28,8 @@ class ButtonFragment : StatefulFragment<ButtonViewModel>(R.layout.fragment_butto
             }
 
             holdButton.apply {
+//                AskContinueFragment.create(parentFragmentManager)
+
                 setOnTouchListener { _, event ->
                     if (event.action == MotionEvent.ACTION_DOWN) {
                         hintImage.animate().alpha(0.0f).duration = 200
@@ -36,6 +38,7 @@ class ButtonFragment : StatefulFragment<ButtonViewModel>(R.layout.fragment_butto
 
                     if (event.action == MotionEvent.ACTION_UP) {
                         viewModel.onButtonStopHold()
+//                        AskContinueFragment.create(parentFragmentManager)
                     }
                     true
                 }

@@ -6,4 +6,6 @@
     <string name="my_records">Мои рекорды</string>
     <string name="world_records">Мировой рейтинг</string>
 
+    <string name="empty_result_list">Список результатов пока что пуст</string>
+
 </resources>

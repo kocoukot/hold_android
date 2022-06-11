@@ -6,5 +6,5 @@ class GetUserResultsUseCase(
     private val accountRepository: AccountRepository,
 ) {
 
-    operator fun invoke() = accountRepository.getUserResults()
+    suspend operator fun invoke() = accountRepository.getUserResults()
 }

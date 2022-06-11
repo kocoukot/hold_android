@@ -5,7 +5,6 @@ import com.hold.arch.common.livedata.SingleLiveEvent
 import com.hold.domain.model.RecordType
 import com.hold.domain.usecase.user.GetUserResultsUseCase
 import com.hold.ui.leaderboard.model.LeaderboardActions
-import com.hold.ui.leaderboard.model.LeaderboardModel
 import com.hold.ui.leaderboard.model.LeaderboardRoute
 import com.hold.ui.leaderboard.model.LeaderboardState
 import io.reactivex.disposables.CompositeDisposable
@@ -31,15 +30,7 @@ class AskContinueViewModel(
     }
 
     init {
-        getUserLocalResultsUseCase.invoke()?.let { user ->
-            _state.value = _state.value.copy(
-                data = LeaderboardModel(
-                    personalRecords = user,
-                    worldRecordRecords = null
-                )
-            )
 
-        }
     }
 
     fun setInputAction(action: LeaderboardActions) {

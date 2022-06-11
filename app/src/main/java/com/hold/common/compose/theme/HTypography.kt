@@ -28,6 +28,13 @@ data class HTypography internal constructor(
         fontWeight = FontWeight.W400,
         color = Color(0xFFFFFFFF)
     ),
+
+    val textGray: TextStyle = TextStyle(
+        fontSize = 16.sp,
+        lineHeight = 20.sp,
+        fontWeight = FontWeight.W400,
+        color = Color(0xFFFFFFFF)
+    ),
 //
 //    val robotoRegular16: TextStyle = TextStyle(
 //        fontSize = 16.sp,

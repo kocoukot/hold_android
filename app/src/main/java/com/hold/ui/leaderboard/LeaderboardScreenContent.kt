@@ -1,11 +1,9 @@
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -16,6 +14,7 @@ import com.hold.common.compose.theme.HTheme
 import com.hold.domain.model.RecordType
 import com.hold.ui.leaderboard.LeaderboardViewModel
 import com.hold.ui.leaderboard.model.LeaderboardActions
+import com.hold.ui.leaderboard.screen.GlobalRecordRow
 import com.hold.ui.leaderboard.screen.PersonalRecordRow
 import com.hold.ui.leaderboard.screen.RecordTabBar
 
@@ -72,27 +71,43 @@ fun LeaderboardScreeContent(viewModel: LeaderboardViewModel) {
             )
 
 
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        top = 20.dp
-                    )
-            ) {
-
-                when (state.value.selectedRecords) {
-                    RecordType.PERSONAL -> {
-                        state.value.data?.personalRecords?.let { personal ->
-
-                            itemsIndexed(personal.records) { index, record ->
-                                PersonalRecordRow(index + 1, record)
+            when (state.value.selectedRecords) {
+                RecordType.PERSONAL -> {
+                    state.value.data?.personalRecords?.records?.let { records ->
+                        if (records.isEmpty()) {
+                            EmptyListLabel()
+                        } else {
+                            LazyColumn(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(
+                                        top = 20.dp
+                                    )
+                            ) {
+                                itemsIndexed(records) { index, record ->
+                                    PersonalRecordRow(index + 1, record)
+                                }
                             }
-
-
                         }
                     }
-                    RecordType.GLOBAL -> {
-
+                }
+                RecordType.GLOBAL -> {
+                    state.value.data?.worldRecordRecords?.let { records ->
+                        if (records.isEmpty()) {
+                            EmptyListLabel()
+                        } else {
+                            LazyColumn(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(
+                                        top = 20.dp
+                                    )
+                            ) {
+                                itemsIndexed(records) { index, gameUser ->
+                                    GlobalRecordRow(index + 1, gameUser)
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -100,5 +115,21 @@ fun LeaderboardScreeContent(viewModel: LeaderboardViewModel) {
     }
 }
 
+
+@Composable
+fun EmptyListLabel() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = stringResource(id = R.string.empty_result_list),
+            textAlign = TextAlign.Center,
+            style = HTheme.typography.titleHeader
+        )
+    }
+}
 
 

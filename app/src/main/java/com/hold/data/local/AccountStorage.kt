@@ -30,8 +30,8 @@ class AccountStorage(
         val list = user.records
 
         list.let { results ->
-            results.add(result)
-            results.sortByDescending { result ->
+            results.toMutableList().add(result)
+            results.toMutableList().sortByDescending { result ->
                 result.result
             }
         }

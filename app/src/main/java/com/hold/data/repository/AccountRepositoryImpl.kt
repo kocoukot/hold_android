@@ -19,7 +19,7 @@ class AccountRepositoryImpl(private val accountStorage: AccountStorage) : Accoun
         accountStorage.setNewResult(result)
     }
 
-    override fun getUserResults(): GameUser? {
+    override suspend fun getUserResults(): GameUser? {
         val t = accountStorage.getUserResults()
         Timber.d("HERE $t")
         return t

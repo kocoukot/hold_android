@@ -1,19 +1,24 @@
 package com.hold.ui.leaderboard
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.hold.arch.common.livedata.SingleLiveEvent
 import com.hold.domain.model.RecordType
+import com.hold.domain.usecase.user.GetGlobalResultsUseCase
 import com.hold.domain.usecase.user.GetUserResultsUseCase
 import com.hold.ui.leaderboard.model.LeaderboardActions
 import com.hold.ui.leaderboard.model.LeaderboardModel
 import com.hold.ui.leaderboard.model.LeaderboardRoute
 import com.hold.ui.leaderboard.model.LeaderboardState
 import io.reactivex.disposables.CompositeDisposable
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 class LeaderboardViewModel(
-    private val getUserLocalResultsUseCase: GetUserResultsUseCase,
+    getUserLocalResultsUseCase: GetUserResultsUseCase,
+    getGlobalResultsUseCase: GetGlobalResultsUseCase,
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<LeaderboardState> =
@@ -31,15 +36,23 @@ class LeaderboardViewModel(
     }
 
     init {
-        getUserLocalResultsUseCase.invoke()?.let { user ->
-            _state.value = _state.value.copy(
-                data = LeaderboardModel(
-                    personalRecords = user,
-                    worldRecordRecords = null
-                )
-            )
+        viewModelScope.launch {
+            try {
+                val localUser = async { getUserLocalResultsUseCase() }
+                val globalUsers = async { getGlobalResultsUseCase() }
 
+                _state.value = _state.value.copy(
+                    data = LeaderboardModel(
+                        personalRecords = localUser.await(),
+                        worldRecordRecords = globalUsers.await()
+                    )
+                )
+            } catch (e: Exception) {
+                _state.value =
+                    _state.value.copy(errorText = e.localizedMessage ?: "Oops! Some error :(")
+            }
         }
+
     }
 
     fun setInputAction(action: LeaderboardActions) {
