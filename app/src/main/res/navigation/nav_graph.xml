@@ -20,12 +20,9 @@
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
         <action
-            android:id="@+id/action_buttonFragment_to_askContinueFragment"
-            app:destination="@id/askContinueFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+            android:id="@+id/action_buttonFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+
     </fragment>
     <fragment
         android:id="@+id/leaderboardFragment"
@@ -33,7 +30,9 @@
         android:label="LeaderboardFragment"
         tools:layout="@layout/fragment_leaderboard" />
     <fragment
-        android:id="@+id/askContinueFragment"
-        android:name="com.hold.ui.endgame.ask.EndgameFragment"
-        android:label="AskContinueFragment" />
+        android:id="@+id/profileFragment"
+        android:name="com.hold.ui.profile.ProfileFragment"
+        android:label="ProfileFragment" />
+
+
 </navigation>

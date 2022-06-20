@@ -39,7 +39,7 @@ fun MainButtonScreenContent(viewModel: ButtonViewModel) {
 
     val state = viewModel.state.collectAsState()
     var isEndGame by remember { mutableStateOf(GameState.BUTTON) }
-    isEndGame = state.value.isEndGame
+    isEndGame = state.value.gameState
 
 
     BackHandler {

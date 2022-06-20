@@ -55,7 +55,7 @@ class LeaderboardViewModel(
 
     }
 
-    fun setInputAction(action: LeaderboardActions) {
+    fun setInputActions(action: LeaderboardActions) {
         when (action) {
             LeaderboardActions.ClickOnBack -> goBack()
             is LeaderboardActions.ClickOnRecordChange -> clickOnChangeRecords(action.record)

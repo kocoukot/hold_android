@@ -7,7 +7,7 @@ import com.hold.domain.model.user.GameUser
 data class MainGameState(
     val errorText: String = "",
     val isLoading: Boolean = false,
-    val isEndGame: GameState = GameState.BUTTON,
+    val gameState: GameState = GameState.BUTTON,
     val endgameState: EndgameState = EndgameState.END_OR_CONTINUE,
     val timer: Long? = null,
     val gameRecord: Long? = null,

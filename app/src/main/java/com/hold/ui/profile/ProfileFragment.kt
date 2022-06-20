@@ -1,4 +1,4 @@
-package com.hold.ui.button
+package com.hold.ui.profile
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,16 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.hold.R
-import com.hold.ui.button.model.ButtonRoute
 import com.hold.ui.common.ext.navController
 import com.hold.ui.common.ext.observeNonNull
+import com.hold.ui.profile.model.ProfileRoute
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class ButtonFragment : Fragment() {
-    private val viewModel: ButtonViewModel by viewModel()
+class ProfileFragment : Fragment() {
+    private val viewModel: ProfileViewModel by viewModel()
 
 
     override fun onCreateView(
@@ -26,22 +24,17 @@ class ButtonFragment : Fragment() {
 
         viewModel.steps.observeNonNull(viewLifecycleOwner) { route ->
             when (route) {
-                ButtonRoute.ToLeaderboard -> navController.navigate(R.id.action_buttonFragment_to_leaderboardFragment)
-                ButtonRoute.ToProfile -> navController.navigate(R.id.action_buttonFragment_to_profileFragment)
-                ButtonRoute.CloseApp -> requireActivity().finish()
+                ProfileRoute.OnBack -> navController.popBackStack()
             }
         }
-        activity?.window?.apply {
-            statusBarColor = ContextCompat.getColor(requireContext(), R.color.main_background)
-            navigationBarColor = ContextCompat.getColor(requireContext(), R.color.main_background)
-        }
+
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(
                 ViewCompositionStrategy.DisposeOnLifecycleDestroyed(viewLifecycleOwner)
             )
 
             setContent {
-                MainButtonScreenContent(viewModel)
+                ProfileScreeContent(viewModel)
             }
         }
     }

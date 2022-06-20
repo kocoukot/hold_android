@@ -30,7 +30,7 @@ fun NameInputContent(
     saveName: (String) -> Unit
 ) {
     var inputText by remember { mutableStateOf(userName) }
-    if (userName.isNotEmpty()) inputText = userName
+   // if (userName.isNotEmpty()) inputText = userName
 
     var buttonType by remember { mutableStateOf(EndgameButtons.SAVE_NICKNAME_EMPTY) }
 

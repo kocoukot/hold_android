@@ -8,6 +8,7 @@ import com.hold.arch.common.livedata.SingleLiveEvent
 import com.hold.domain.model.EndgameModel
 import com.hold.domain.model.EndgameState
 import com.hold.domain.model.user.GameResult
+import com.hold.domain.model.user.GameUser
 import com.hold.domain.usecase.user.GetUserLocalRecordUseCase
 import com.hold.domain.usecase.user.GetUserNameUseCase
 import com.hold.domain.usecase.user.SaveNewResultUseCase
@@ -57,19 +58,19 @@ class ButtonViewModel(
             ButtonActions.ClickOnBack, ButtonActions.ClickOnCancel -> closeEndGame()
             ButtonActions.PressedBackButton -> backPressed()
 
+            is ButtonActions.NickNameSave -> nicknameSave(action.nickname)
 
             ButtonActions.ClickOnContinue -> continueGame()
             ButtonActions.ClickOnPay -> payForGame()
             ButtonActions.ClickOnPayDay -> {}
             ButtonActions.ClickOnPayOnce -> {}
             ButtonActions.ClickOnWatchAdd -> {}
-            is ButtonActions.NickNameSave -> nicknameSave(action.nickname)
 
         }
     }
 
     private fun backPressed() {
-        when (state.value.isEndGame) {
+        when (state.value.gameState) {
             GameState.BUTTON -> ButtonRoute.CloseApp
             GameState.END_GAME -> {
                 when (_state.value.endgameState) {
@@ -81,7 +82,7 @@ class ButtonViewModel(
                 }
             }
             GameState.USERNAME_INPUT -> _state.value =
-                _state.value.copy(isEndGame = GameState.BUTTON)
+                _state.value.copy(gameState = GameState.BUTTON)
         }
     }
 
@@ -94,22 +95,22 @@ class ButtonViewModel(
         }
         _state.value = _state.value.copy(endgameState = EndgameState.END_OR_CONTINUE)
         if (_state.value.gameUser == null || _state.value.gameUser?.userName?.isEmpty() == true) {
-            _state.value = _state.value.copy(isEndGame = GameState.USERNAME_INPUT)
+            _state.value = _state.value.copy(gameState = GameState.USERNAME_INPUT)
         } else {
-            _state.value = _state.value.copy(isEndGame = GameState.BUTTON)
+            _state.value = _state.value.copy(gameState = GameState.BUTTON)
         }
 
     }
 
     private fun nicknameSave(nickName: String) {
         Timber.d("nicknameSave $nickName")
-        var data = _state.value.gameUser
-        data = data?.copy(userName = nickName)
-        data?.let {
-            viewModelScope.launch {
+        viewModelScope.launch {
+            var data = getUserNameUseCase.getName() ?: GameUser()// _state.value.gameUser
+            data = data.copy(userName = nickName)
+            data.let {
                 saveUserNameUseCase.saveName(nickName)
                 _state.value = _state.value.copy(gameUser = it)
-                _state.value = _state.value.copy(isEndGame = GameState.BUTTON)
+                _state.value = _state.value.copy(gameState = GameState.BUTTON)
             }
         }
     }
@@ -144,7 +145,7 @@ class ButtonViewModel(
                     currentValue = newValue,
                 )
             )
-            _state.value = _state.value.copy(isEndGame = GameState.END_GAME)
+            _state.value = _state.value.copy(gameState = GameState.END_GAME)
         }
     }
 
