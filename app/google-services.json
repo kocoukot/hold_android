@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "564678831028",
+    "project_id": "hold-1d706",
+    "storage_bucket": "hold-1d706.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:564678831028:android:9bdfac914d37263ed360e1",
+        "android_client_info": {
+          "package_name": "com.hold"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "564678831028-1tv9o1gar598to9ao3jrv8kf62bh7q99.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hold",
+            "certificate_hash": "2d5b179c55f8b3b38416235cc99b0dd214d85163"
+          }
+        },
+        {
+          "client_id": "564678831028-vt0rufmtfqqj29ajd180dspas23lcb3g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_ZmZK94UUrUaYlKQA12ScuewRouCETug"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "564678831028-vt0rufmtfqqj29ajd180dspas23lcb3g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
