@@ -10,6 +10,7 @@
 
     <color name="main_background">#04103A</color>
     <color name="blue_selected">#1F7AFE</color>
+    <color name="main_background50">#80000000</color>
 
     <color name="white_30">#4DFFFFFF</color>
     <color name="white_50">#80FFFFFF</color>

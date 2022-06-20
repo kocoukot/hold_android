@@ -29,7 +29,8 @@ fun LeaderboardScreeContent(viewModel: LeaderboardViewModel) {
             TopAppBar(
                 elevation = 0.dp,
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
                 title = {
                     Text(
                         text = stringResource(id = R.string.achievements),
@@ -40,7 +41,6 @@ fun LeaderboardScreeContent(viewModel: LeaderboardViewModel) {
                 navigationIcon = {
                     IconButton(
                         onClick = { viewModel.setInputAction(LeaderboardActions.ClickOnBack) },
-                        modifier = Modifier.padding(start = 16.dp)
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_navigation),
@@ -49,11 +49,11 @@ fun LeaderboardScreeContent(viewModel: LeaderboardViewModel) {
                         )
                     }
                 },
-                backgroundColor = HTheme.colors.primaryBackGround,
+                backgroundColor = HTheme.colors.primaryBackground,
             )
         },
         modifier = Modifier.fillMaxSize(),
-        backgroundColor = HTheme.colors.primaryBackGround,
+        backgroundColor = HTheme.colors.primaryBackground,
     ) {
         Column(
             modifier = Modifier
@@ -62,7 +62,7 @@ fun LeaderboardScreeContent(viewModel: LeaderboardViewModel) {
         )
         {
             RecordTabBar(
-                backgroundColor = HTheme.colors.primaryBackGround,
+                backgroundColor = HTheme.colors.primaryBackground,
                 tabPage = tabPage,
                 onTabSelected = {
                     tabPage = it

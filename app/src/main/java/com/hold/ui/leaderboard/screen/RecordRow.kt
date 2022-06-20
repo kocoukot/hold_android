@@ -7,14 +7,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.hold.common.compose.theme.HTheme
-import com.hold.domain.model.user.GameRecord
+import com.hold.domain.model.user.GameResult
 import com.hold.domain.model.user.GameUser
 import com.hold.utils.DateUtil.getRecordDate
 import com.hold.utils.DateUtil.getRecordResult
 import timber.log.Timber
 
 @Composable
-fun PersonalRecordRow(index: Int, record: GameRecord) {
+fun PersonalRecordRow(index: Int, record: GameResult) {
 
     Row(
         modifier = Modifier
@@ -42,38 +42,39 @@ fun PersonalRecordRow(index: Int, record: GameRecord) {
 @Composable
 fun GlobalRecordRow(index: Int, gameUser: GameUser) {
 
-    val userRecord = gameUser.records.maxOf { it.result }
-    val recordDate = gameUser.records.find { it.result == userRecord }!!
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 30.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
+    val recordDate = gameUser.records.maxWithOrNull(Comparator.comparingLong { it.result })
+    recordDate?.let {
         Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 30.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                index.toString(),
-                style = HTheme.typography.titleHeader,
-                modifier = Modifier
-                    .padding(end = 16.dp)
-            )
-//            NetworkImage()
-            Column(
-                modifier = Modifier,
-                horizontalAlignment = Alignment.Start,
-                verticalArrangement = Arrangement.Center
+            Row(
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(gameUser.userName, style = HTheme.typography.commonText)
                 Text(
-                    getRecordDate(recordDate.date),
-                    style = HTheme.typography.commonText,
-                    color = HTheme.colors.secondaryWhite50
+                    index.toString(),
+                    style = HTheme.typography.titleHeader,
+                    modifier = Modifier
+                        .padding(end = 16.dp)
                 )
+//            NetworkImage()
+                Column(
+                    modifier = Modifier,
+                    horizontalAlignment = Alignment.Start,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(gameUser.userName, style = HTheme.typography.commonText)
+                    Text(
+                        getRecordDate(recordDate.date),
+                        style = HTheme.typography.commonText,
+                        color = HTheme.colors.primaryWhite50
+                    )
+                }
             }
+            Text(getRecordResult(recordDate.result), style = HTheme.typography.titleHeader)
         }
-        Text(getRecordResult(recordDate.result), style = HTheme.typography.titleHeader)
     }
 }

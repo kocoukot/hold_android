@@ -134,7 +134,7 @@ private fun RecordTab(
 @Composable
 private fun PreviewHomeTabBar() {
     RecordTabBar(
-        backgroundColor = HTheme.colors.primaryBackGround,
+        backgroundColor = HTheme.colors.primaryBackground,
         tabPage = RecordType.PERSONAL,
         onTabSelected = {}
     )

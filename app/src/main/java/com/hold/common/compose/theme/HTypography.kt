@@ -15,6 +15,13 @@ data class HTypography internal constructor(
         color = Color(0xFFFFFFFF)
     ),
 
+    val subtitleHeader: TextStyle = TextStyle(
+        fontSize = 28.sp,
+        lineHeight = 34.sp,
+        fontWeight = FontWeight.W600,
+        color = Color(0xFFFFFFFF)
+    ),
+
     val titleSubHeader: TextStyle = TextStyle(
         fontSize = 16.sp,
         lineHeight = 20.sp,
@@ -33,7 +40,7 @@ data class HTypography internal constructor(
         fontSize = 16.sp,
         lineHeight = 20.sp,
         fontWeight = FontWeight.W400,
-        color = Color(0xFFFFFFFF)
+        color = Color(0x80FFFFFF)
     ),
 //
 //    val robotoRegular16: TextStyle = TextStyle(

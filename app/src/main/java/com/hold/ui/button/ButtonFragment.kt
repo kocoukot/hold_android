@@ -1,57 +1,48 @@
 package com.hold.ui.button
 
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.MotionEvent
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import com.hold.R
-import com.hold.arch.presentation.StatefulFragment
-import com.hold.databinding.FragmentButtonBinding
+import com.hold.ui.button.model.ButtonRoute
 import com.hold.ui.common.ext.navController
-import com.hold.ui.common.ext.viewBinding
-import com.hold.utils.DateUtil
+import com.hold.ui.common.ext.observeNonNull
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class ButtonFragment : StatefulFragment<ButtonViewModel>(R.layout.fragment_button) {
-    override val viewModel: ButtonViewModel by viewModel()
-    private val binding by viewBinding(FragmentButtonBinding::bind)
+class ButtonFragment : Fragment() {
+    private val viewModel: ButtonViewModel by viewModel()
 
-    @SuppressLint("ClickableViewAccessibility")
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        with(binding) {
 
-            toLeaderboard.apply {
-                setOnClickListener {
-                    navController.navigate(R.id.action_buttonFragment_to_leaderboardFragment)
-                }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+
+        viewModel.steps.observeNonNull(viewLifecycleOwner) { route ->
+            when (route) {
+                ButtonRoute.ToLeaderboard -> navController.navigate(R.id.action_buttonFragment_to_leaderboardFragment)
+                ButtonRoute.ToProfile -> {}
+
             }
-
-            holdButton.apply {
-//                AskContinueFragment.create(parentFragmentManager)
-
-                setOnTouchListener { _, event ->
-                    if (event.action == MotionEvent.ACTION_DOWN) {
-                        hintImage.animate().alpha(0.0f).duration = 200
-                        viewModel.onButtonStartHold()
-                    }
-
-                    if (event.action == MotionEvent.ACTION_UP) {
-                        viewModel.onButtonStopHold()
-//                        AskContinueFragment.create(parentFragmentManager)
-                    }
-                    true
-                }
-            }
-
         }
+        activity?.window?.apply {
+            statusBarColor = ContextCompat.getColor(requireContext(), R.color.main_background)
+            navigationBarColor = ContextCompat.getColor(requireContext(), R.color.main_background)
+        }
+        return ComposeView(requireContext()).apply {
+            setViewCompositionStrategy(
+                ViewCompositionStrategy.DisposeOnLifecycleDestroyed(viewLifecycleOwner)
+            )
 
-        observeLiveData()
-    }
-
-    private fun observeLiveData() {
-        observeScreenState(ButtonScreenState::timer) {
-            binding.timerView.text = DateUtil.timeTimerFormat(it)
+            setContent {
+                MainButtonScreenContent(viewModel)
+            }
         }
     }
 }

@@ -19,6 +19,18 @@ object DateUtil {
         return String.format("%02d:%02d:%02d.%02d", hours, minutes, seconds, millis)
     }
 
+    fun toRecordResolve(result: Long): String {
+        println("game result $result")
+        return when {
+            result < 60000 -> "${result.toDouble() / 1000} sec"
+            result >= 60000 -> {
+                val min = result / 60000
+                val sec = result - (min * 60000)
+                "$min min ${sec.toDouble() / 1000} sec"
+            }
+            else -> ""
+        }
+    }
 
     fun timeTimerFormat(time: Long): CharSequence = timerFormat.format(time)
 

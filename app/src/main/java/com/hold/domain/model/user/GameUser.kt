@@ -8,5 +8,5 @@ data class GameUser(
     val id: String? = "",
     val avatar: String? = "",
     val userName: String = "",
-    val records: List<GameRecord> = mutableListOf(),
+    val records: MutableList<GameResult> = mutableListOf(),
 ) : Parcelable

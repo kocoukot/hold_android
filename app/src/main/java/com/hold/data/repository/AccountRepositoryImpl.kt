@@ -2,9 +2,8 @@ package com.hold.data.repository
 
 
 import com.hold.data.local.AccountStorage
-import com.hold.domain.model.user.GameRecord
+import com.hold.domain.model.user.GameResult
 import com.hold.domain.model.user.GameUser
-import timber.log.Timber
 
 class AccountRepositoryImpl(private val accountStorage: AccountStorage) : AccountRepository {
 
@@ -15,15 +14,16 @@ class AccountRepositoryImpl(private val accountStorage: AccountStorage) : Accoun
             accountStorage.sessionToken = value
         }
 
-    override fun setNewResult(result: GameRecord) {
+    override suspend fun setNewResult(result: GameResult) {
         accountStorage.setNewResult(result)
     }
 
-    override suspend fun getUserResults(): GameUser? {
-        val t = accountStorage.getUserResults()
-        Timber.d("HERE $t")
-        return t
-    }
+    override suspend fun getUserResults(): GameUser = accountStorage.getUserResults() ?: GameUser()
+
+    override suspend fun getRecord(): GameResult? = accountStorage.getUserResults()
+        ?.records
+        ?.takeIf { it.isNotEmpty() }
+        ?.maxWithOrNull(Comparator.comparingLong { it.result })
 
 
 //    override fun getUserAccountSelector() = accountStorage.getAccountSelector()

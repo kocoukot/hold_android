@@ -34,6 +34,6 @@
         tools:layout="@layout/fragment_leaderboard" />
     <fragment
         android:id="@+id/askContinueFragment"
-        android:name="com.hold.ui.endgame.ask.AskContinueFragment"
+        android:name="com.hold.ui.endgame.ask.EndgameFragment"
         android:label="AskContinueFragment" />
 </navigation>

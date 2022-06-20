@@ -4,7 +4,7 @@ import android.accounts.Account
 import android.accounts.AccountManager
 //import com.hold.domain.model.User
 import com.google.gson.Gson
-import com.hold.domain.model.user.GameRecord
+import com.hold.domain.model.user.GameResult
 import com.hold.domain.model.user.GameUser
 
 
@@ -18,10 +18,10 @@ class AccountStorage(
             accountManager.setAuthToken(getOrCreateAccount(), SESSION_TOKEN, value)
         }
 
-    fun setNewResult(result: GameRecord) = setNewResult(getOrCreateAccount(), result)
+    fun setNewResult(result: GameResult) = setNewResult(getOrCreateAccount(), result)
 
 
-    private fun setNewResult(currentAccount: Account, result: GameRecord) {
+    private fun setNewResult(currentAccount: Account, result: GameResult) {
 
         var user = accountManager.getUserData(currentAccount, USER)
             ?.takeIf { it.isNotEmpty() }
@@ -30,14 +30,15 @@ class AccountStorage(
         val list = user.records
 
         list.let { results ->
-            results.toMutableList().add(result)
-            results.toMutableList().sortByDescending { result ->
+            results.add(result)
+            results.sortByDescending { result ->
                 result.result
             }
         }
         val slicedList = if (list.size >= 15) list.slice(0..14) else list
 
         user = user.copy(records = slicedList.toMutableList())
+        println("new record storage $user")
         return accountManager.setUserData(currentAccount, USER, gson.toJson(user))
 
     }

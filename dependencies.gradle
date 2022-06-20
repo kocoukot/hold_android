@@ -25,6 +25,7 @@ ext {
         // Integration with observables
         implementation("androidx.compose.runtime:runtime-livedata:$compose_version")
         implementation("androidx.compose.runtime:runtime-rxjava2:$compose_version")
+        implementation "androidx.constraintlayout:constraintlayout-compose:1.0.0-beta02"
 
         implementation 'androidx.activity:activity-compose:1.4.0'
         // Compose Material Design
@@ -46,6 +47,8 @@ ext {
 
         implementation "io.coil-kt:coil-compose:1.4.0"
         implementation "io.coil-kt:coil-gif:1.4.0"
+        implementation "com.google.accompanist:accompanist-flowlayout:0.10.0"
+
 
     }
 
