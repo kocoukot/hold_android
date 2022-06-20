@@ -2,7 +2,7 @@ package com.hold.domain.model
 
 import com.hold.domain.model.user.GameResult
 
-class EndgameModel(
+data class EndgameModel(
     val recordValue: GameResult?,
     val currentValue: GameResult?
 )

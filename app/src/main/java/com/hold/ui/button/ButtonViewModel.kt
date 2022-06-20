@@ -16,6 +16,7 @@ import com.hold.ui.button.model.MainGameState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class ButtonViewModel(
     private val saveNewResultUseCase: SaveNewResultUseCase,
@@ -96,6 +97,7 @@ class ButtonViewModel(
     private fun setEndGameData(newValue: GameResult) {
         viewModelScope.launch {
             val gameRecord = getUserLocalRecordUseCase.invoke()
+            Timber.d("gameRecord $gameRecord")
             _state.value = _state.value.copy(
                 endGameData = EndgameModel(
                     recordValue = gameRecord,
