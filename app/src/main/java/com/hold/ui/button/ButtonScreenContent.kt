@@ -24,10 +24,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.hold.R
+import com.hold.common.compose.BackHandler
 import com.hold.common.compose.theme.HTheme
 import com.hold.ui.button.content.EndGameContent
 import com.hold.ui.button.content.MainGameContent
+import com.hold.ui.button.content.NameInputContent
 import com.hold.ui.button.model.ButtonActions
+import com.hold.ui.button.model.GameState
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -35,11 +38,13 @@ fun MainButtonScreenContent(viewModel: ButtonViewModel) {
 
 
     val state = viewModel.state.collectAsState()
-
-
-    var isEndGame by remember { mutableStateOf(false) }
+    var isEndGame by remember { mutableStateOf(GameState.BUTTON) }
     isEndGame = state.value.isEndGame
 
+
+    BackHandler {
+        viewModel.setInputActions(ButtonActions.PressedBackButton)
+    }
 
     Box {
         Scaffold(
@@ -53,37 +58,42 @@ fun MainButtonScreenContent(viewModel: ButtonViewModel) {
                         .padding(horizontal = 16.dp),
                     title = {},
                     navigationIcon = {
-                        IconButton(
-                            onClick = {
-                                if (isEndGame)
-                                    viewModel.setInputActions(ButtonActions.ClickOnBack)
-                                else
-                                    viewModel.setInputActions(ButtonActions.ClickOnToProfile)
-                            },
-                        ) {
-
-                            Icon(
-                                painter = painterResource(
-                                    id =
-                                    if (isEndGame)
-                                        R.drawable.ic_close
-                                    else
-                                        R.drawable.ic_navigation
-                                ),
-                                contentDescription = null,
-                                tint = HTheme.colors.primaryWhite
-                            )
+                        if (isEndGame == GameState.END_GAME || (isEndGame == GameState.BUTTON && !state.value.gameUser?.userName.isNullOrEmpty())) {
+                            AnimatedContent(targetState = isEndGame) { target ->
+                                IconButton(
+                                    modifier = Modifier
+                                        .background(
+                                            if (target == GameState.END_GAME) Color.Transparent else HTheme.colors.primaryWhite30,
+                                            RoundedCornerShape(50)
+                                        ),
+                                    onClick = {
+                                        if (target == GameState.END_GAME)
+                                            viewModel.setInputActions(ButtonActions.ClickOnBack)
+                                        else
+                                            viewModel.setInputActions(ButtonActions.ClickOnToProfile)
+                                    },
+                                ) {
+                                    Icon(
+                                        painter = painterResource(
+                                            id = if (target == GameState.END_GAME)
+                                                R.drawable.ic_close
+                                            else
+                                                R.drawable.ic_user
+                                        ),
+                                        contentDescription = null,
+                                        tint = HTheme.colors.primaryWhite
+                                    )
+                                }
+                            }
                         }
                     },
                     actions = {
-                        AnimatedVisibility(visible = !isEndGame) {
-
+                        AnimatedVisibility(visible = isEndGame == GameState.BUTTON) {
                             IconButton(
                                 onClick = {
                                     viewModel.setInputActions(ButtonActions.ClickOnToLeaderboard)
                                 },
                                 modifier = Modifier
-
                                     .size(46.dp)
                                     .background(
                                         HTheme.colors.primaryWhite30,
@@ -109,30 +119,27 @@ fun MainButtonScreenContent(viewModel: ButtonViewModel) {
                 contentAlignment = Alignment.Center,
             ) { targetState ->
                 when (targetState) {
-                    false -> {
-                        MainGameContent(
-                            modifier = Modifier.fillMaxSize(),
-                            timer = state.value.timer,
-                            record = state.value.gameRecord ?: 0,
-                            buttonAction = {
+                    GameState.BUTTON -> MainGameContent(
+                        modifier = Modifier.fillMaxSize(),
+                        timer = state.value.timer,
+                        record = state.value.gameRecord ?: 0,
+                        buttonAction = {
+                            viewModel.setInputActions(it)
+                        })
+                    GameState.END_GAME -> state.value.endGameData?.let { endGameData ->
+                        EndGameContent(
+                            endGameState = state.value.endgameState,
+                            endGameModel = endGameData,
+                            onActionClicked = {
                                 viewModel.setInputActions(it)
-                            })
+                            }
+                        )
                     }
-                    true -> {
-                        state.value.endGameData?.let { endGameData ->
-                            EndGameContent(
-                                endGameState = state.value.endgameState,
-                                endGameModel = endGameData,
-                                onActionClicked = {
-                                    viewModel.setInputActions(it)
-                                }
-                            )
-                        }
-                    }
+                    GameState.USERNAME_INPUT -> NameInputContent(
+                        saveName = { viewModel.setInputActions(ButtonActions.NickNameSave(it)) }
+                    )
                 }
-
             }
-
         }
     }
 }

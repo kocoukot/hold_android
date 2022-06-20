@@ -25,6 +25,10 @@ class AccountRepositoryImpl(private val accountStorage: AccountStorage) : Accoun
         ?.takeIf { it.isNotEmpty() }
         ?.maxWithOrNull(Comparator.comparingLong { it.result })
 
+    override suspend fun saveUserName(userName: String) = accountStorage.saveName(userName)
+
+    override suspend fun getUserName() = accountStorage.getUserName()
+
 
 //    override fun getUserAccountSelector() = accountStorage.getAccountSelector()
 //

@@ -6,5 +6,7 @@ enum class EndgameButtons {
     PAY,
     WATCH,
     PAY_ONCE,
-    PAY_FOR_DAY
+    PAY_FOR_DAY,
+    SAVE_NICKNAME,
+    SAVE_NICKNAME_EMPTY
 }

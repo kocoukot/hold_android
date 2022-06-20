@@ -2,6 +2,7 @@ package com.hold.ui.button.content
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.*
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
@@ -23,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -95,8 +97,20 @@ fun MainGameContent(
                 bottom.linkTo(button.top, margin = 140.dp)
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
+            }
+        )
 
-            })
+        val infiniteTransition = rememberInfiniteTransition()
+        val labelMargin = infiniteTransition.animateValue(
+            initialValue = 0.dp,
+            targetValue = 15.dp,
+            typeConverter = Dp.VectorConverter,
+            animationSpec = infiniteRepeatable(
+                animation = tween(600, easing = FastOutSlowInEasing),
+                repeatMode = RepeatMode.Reverse
+            )
+        )
+
         Column(
             modifier = Modifier.constrainAs(hint) {
                 bottom.linkTo(button.top)
@@ -108,7 +122,7 @@ fun MainGameContent(
                 visible = hintVisibility,
                 enter = fadeIn(),
                 exit = fadeOut(),
-                modifier = Modifier
+                modifier = Modifier.padding(bottom = labelMargin.value)
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_hold_label),
@@ -154,7 +168,7 @@ fun MainGameContent(
                 CustomComponent(
                     duration = record,
                     canvasSize = 230.dp,
-                    foregroundIndicatorStrokeWidth = 35f
+                    foregroundIndicatorStrokeWidth = 45f
                 )
             }
         }

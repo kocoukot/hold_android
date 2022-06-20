@@ -28,7 +28,7 @@ class ButtonFragment : Fragment() {
             when (route) {
                 ButtonRoute.ToLeaderboard -> navController.navigate(R.id.action_buttonFragment_to_leaderboardFragment)
                 ButtonRoute.ToProfile -> {}
-
+                ButtonRoute.CloseApp -> requireActivity().finish()
             }
         }
         activity?.window?.apply {

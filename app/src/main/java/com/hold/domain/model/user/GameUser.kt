@@ -7,6 +7,6 @@ import kotlinx.parcelize.Parcelize
 data class GameUser(
     val id: String? = "",
     val avatar: String? = "",
-    val userName: String = "",
+    var userName: String = "",
     val records: MutableList<GameResult> = mutableListOf(),
 ) : Parcelable

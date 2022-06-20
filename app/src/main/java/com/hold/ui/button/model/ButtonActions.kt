@@ -7,6 +7,7 @@ sealed class ButtonActions {
     object ClickOnBack : ButtonActions()
     object PressDownButton : ButtonActions()
     object PressUpButton : ButtonActions()
+    object PressedBackButton : ButtonActions()
 
 
     object ClickOnContinue : ButtonActions()
@@ -17,5 +18,8 @@ sealed class ButtonActions {
 
     object ClickOnPayOnce : ButtonActions()
     object ClickOnPayDay : ButtonActions()
+
+    data class NickNameSave(val nickname: String) : ButtonActions()
+
 
 }

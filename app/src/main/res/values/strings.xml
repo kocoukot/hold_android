@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Hold</string>
 
+    <string name="save_text">Save</string>
 
     <string name="achievements">Achievements</string>
     <string name="my_records">My records</string>
@@ -20,6 +21,8 @@
 
     <string name="pay_once">One time %s</string>
     <string name="pay_for_day">For the whole day %s</string>
+    <string name="say_your_name">Enter your name so that we can save the result</string>
+    <string name="nickname_placeholder">Nickname</string>
 
 
 </resources>

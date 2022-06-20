@@ -9,23 +9,28 @@ import com.hold.domain.model.EndgameModel
 import com.hold.domain.model.EndgameState
 import com.hold.domain.model.user.GameResult
 import com.hold.domain.usecase.user.GetUserLocalRecordUseCase
+import com.hold.domain.usecase.user.GetUserNameUseCase
 import com.hold.domain.usecase.user.SaveNewResultUseCase
+import com.hold.domain.usecase.user.SaveUserNameUseCase
 import com.hold.ui.button.model.ButtonActions
 import com.hold.ui.button.model.ButtonRoute
+import com.hold.ui.button.model.GameState
 import com.hold.ui.button.model.MainGameState
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class ButtonViewModel(
     private val saveNewResultUseCase: SaveNewResultUseCase,
     private val getUserLocalRecordUseCase: GetUserLocalRecordUseCase,
+    private val saveUserNameUseCase: SaveUserNameUseCase,
+    private val getUserNameUseCase: GetUserNameUseCase,
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<MainGameState> =
         MutableStateFlow(MainGameState())
-    val state: StateFlow<MainGameState> = _state
+    val state = _state.asStateFlow()
 
     private val _steps: SingleLiveEvent<ButtonRoute> = SingleLiveEvent()
     val steps: SingleLiveEvent<ButtonRoute> = _steps
@@ -35,6 +40,12 @@ class ButtonViewModel(
     private var startTime = 0L
     private var stopTime = 0L
 
+    init {
+        viewModelScope.launch {
+            val gameUser = getUserNameUseCase.getName()
+            _state.value = _state.value.copy(gameUser = gameUser)
+        }
+    }
 
     fun setInputActions(action: ButtonActions) {
         when (action) {
@@ -44,6 +55,7 @@ class ButtonViewModel(
             ButtonActions.PressDownButton -> onButtonStartHold()
             ButtonActions.PressUpButton -> onButtonStopHold()
             ButtonActions.ClickOnBack, ButtonActions.ClickOnCancel -> closeEndGame()
+            ButtonActions.PressedBackButton -> backPressed()
 
 
             ButtonActions.ClickOnContinue -> continueGame()
@@ -51,6 +63,25 @@ class ButtonViewModel(
             ButtonActions.ClickOnPayDay -> {}
             ButtonActions.ClickOnPayOnce -> {}
             ButtonActions.ClickOnWatchAdd -> {}
+            is ButtonActions.NickNameSave -> nicknameSave(action.nickname)
+
+        }
+    }
+
+    private fun backPressed() {
+        when (state.value.isEndGame) {
+            GameState.BUTTON -> ButtonRoute.CloseApp
+            GameState.END_GAME -> {
+                when (_state.value.endgameState) {
+                    EndgameState.END_OR_CONTINUE -> closeEndGame()
+                    EndgameState.PAY_OR_WATCH -> _state.value =
+                        _state.value.copy(endgameState = EndgameState.END_OR_CONTINUE)
+                    EndgameState.PAY_AMOUNT -> _state.value =
+                        _state.value.copy(endgameState = EndgameState.PAY_OR_WATCH)
+                }
+            }
+            GameState.USERNAME_INPUT -> _state.value =
+                _state.value.copy(isEndGame = GameState.BUTTON)
         }
     }
 
@@ -60,18 +91,27 @@ class ButtonViewModel(
                 saveNewResultUseCase.invoke(current)
             }
             _state.value = _state.value.copy(timer = null)
-
         }
         _state.value = _state.value.copy(endgameState = EndgameState.END_OR_CONTINUE)
-        _state.value = _state.value.copy(isEndGame = false)
+        if (_state.value.gameUser == null || _state.value.gameUser?.userName?.isEmpty() == true) {
+            _state.value = _state.value.copy(isEndGame = GameState.USERNAME_INPUT)
+        } else {
+            _state.value = _state.value.copy(isEndGame = GameState.BUTTON)
+        }
+
     }
 
-    private fun goLeaderboard() {
-        _steps.value = ButtonRoute.ToLeaderboard
-    }
-
-    private fun goProfile() {
-        _steps.value = ButtonRoute.ToProfile
+    private fun nicknameSave(nickName: String) {
+        Timber.d("nicknameSave $nickName")
+        var data = _state.value.gameUser
+        data = data?.copy(userName = nickName)
+        data?.let {
+            viewModelScope.launch {
+                saveUserNameUseCase.saveName(nickName)
+                _state.value = _state.value.copy(gameUser = it)
+                _state.value = _state.value.copy(isEndGame = GameState.BUTTON)
+            }
+        }
     }
 
 
@@ -80,6 +120,7 @@ class ButtonViewModel(
     }
 
     private fun onButtonStopHold() {
+        handler.removeCallbacksAndMessages(null)
         stopTime = System.currentTimeMillis()
         val newRecord = GameResult(
             date = stopTime,
@@ -90,7 +131,6 @@ class ButtonViewModel(
 //            saveNewResultUseCase.invoke(newRecord)
         }
 
-        handler.removeCallbacksAndMessages(null)
         setEndGameData(newRecord)
     }
 
@@ -104,7 +144,7 @@ class ButtonViewModel(
                     currentValue = newValue,
                 )
             )
-            _state.value = _state.value.copy(isEndGame = true)
+            _state.value = _state.value.copy(isEndGame = GameState.END_GAME)
         }
     }
 
@@ -120,6 +160,14 @@ class ButtonViewModel(
             }, 0)
         }
 
+    }
+
+    private fun goLeaderboard() {
+        _steps.value = ButtonRoute.ToLeaderboard
+    }
+
+    private fun goProfile() {
+        _steps.value = ButtonRoute.ToProfile
     }
 
     private fun update() {

@@ -27,15 +27,28 @@ fun AnswerButton(
     buttonType: EndgameButtons,
     onButtonClick: (EndgameButtons) -> Unit
 ) {
+
     val buttonColor =
-        if (buttonType == EndgameButtons.CONTINUE || buttonType == EndgameButtons.PAY || buttonType == EndgameButtons.PAY_ONCE) HTheme.colors.primaryBlue else Color.Transparent
+        if (buttonType == EndgameButtons.CONTINUE ||
+            buttonType == EndgameButtons.PAY ||
+            buttonType == EndgameButtons.PAY_ONCE ||
+            buttonType == EndgameButtons.PAY ||
+            buttonType == EndgameButtons.SAVE_NICKNAME
+        )
+            HTheme.colors.primaryBlue
+        else
+            Color.Transparent
     Button(
+        enabled = buttonType != EndgameButtons.SAVE_NICKNAME_EMPTY,
         contentPadding = PaddingValues(vertical = 14.dp),
         modifier = modifier,
         elevation = ButtonDefaults.elevation(0.dp),
         shape = RoundedCornerShape(16.dp),
         border = BorderStroke(1.dp, HTheme.colors.primaryBlue),
-        colors = ButtonDefaults.buttonColors(backgroundColor = buttonColor),
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = buttonColor,
+            disabledBackgroundColor = Color.Transparent
+        ),
         onClick = { onButtonClick(buttonType) }) {
         Row(
             modifier = Modifier,

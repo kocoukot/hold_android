@@ -14,4 +14,8 @@ interface AccountRepository {
 
     suspend fun getRecord(): GameResult?
 
+    suspend fun saveUserName(userName: String)
+
+    suspend fun getUserName(): GameUser?
+
 }

@@ -1,9 +1,6 @@
 package com.hold.di
 
-import com.hold.domain.usecase.user.GetGlobalResultsUseCase
-import com.hold.domain.usecase.user.GetUserLocalRecordUseCase
-import com.hold.domain.usecase.user.GetUserResultsUseCase
-import com.hold.domain.usecase.user.SaveNewResultUseCase
+import com.hold.domain.usecase.user.*
 import org.koin.dsl.module
 
 val useCaseModule = module {
@@ -16,6 +13,9 @@ val useCaseModule = module {
 
     factory { GetUserLocalRecordUseCase(get()) }
 
+    factory { GetUserNameUseCase(get()) }
+
+    factory { SaveUserNameUseCase(get()) }
 
 }
 

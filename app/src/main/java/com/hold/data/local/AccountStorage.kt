@@ -65,6 +65,20 @@ class AccountStorage(
             }
     }
 
+    fun saveName(userName: String) = saveName(getOrCreateAccount(), userName)
+
+    private fun saveName(currentAccount: Account, userName: String) {
+        var user = accountManager.getUserData(currentAccount, USER)
+            ?.takeIf { it.isNotEmpty() }
+            ?.let { gson.fromJson(it, GameUser::class.java) } ?: GameUser()
+        user = user.copy(userName = userName)
+        return accountManager.setUserData(currentAccount, USER, gson.toJson(user))
+    }
+
+    fun getUserName(): GameUser? = accountManager.getUserData(getOrCreateAccount(), USER)
+        ?.let { gson.fromJson(it, GameUser::class.java) }
+
+
     private fun getAccount(): Account? =
         accountManager.getAccountsByType(ACCOUNT_TYPE).singleOrNull()
 
