@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/buttonFragment"
-        android:name="com.hold.ui.button.ButtonFragment"
+        android:name="com.kocoukot.holdgame.ui.button.ButtonFragment"
         android:label="ButtonFragment"
         tools:layout="@layout/fragment_button">
 
@@ -26,12 +26,12 @@
     </fragment>
     <fragment
         android:id="@+id/leaderboardFragment"
-        android:name="com.hold.ui.leaderboard.LeaderboardFragment"
+        android:name="com.kocoukot.holdgame.ui.leaderboard.LeaderboardFragment"
         android:label="LeaderboardFragment"
         tools:layout="@layout/fragment_leaderboard" />
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.hold.ui.profile.ProfileFragment"
+        android:name="com.kocoukot.holdgame.ui.profile.ProfileFragment"
         android:label="ProfileFragment" />
 
 

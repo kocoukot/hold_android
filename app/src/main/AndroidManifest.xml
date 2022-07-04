@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.hold">
+    package="com.kocoukot.holdgame">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".HoldApplication"
+        android:name="com.holdgame.HoldApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -15,7 +15,7 @@
         android:theme="@style/Theme.Hold.NoActionBar"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".ui.MainActivity"
+            android:name="com.holdgame.ui.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.Hold.NoActionBar">
             <intent-filter>
@@ -28,7 +28,7 @@
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-8364051315582457~5303783987" />
 
-        <service android:name="com.hold.service.AuthenticatorService">
+        <service android:name="com.holdgame.service.AuthenticatorService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>

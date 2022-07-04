@@ -30,7 +30,7 @@ android {
     compileSdk 31
 
     defaultConfig {
-        applicationId "com.hold"
+        applicationId "com.kocoukot.holdgame"
         minSdkVersion rootProject.min_sdk
         targetSdkVersion rootProject.target_sdk
         versionCode computeVersionCode()
