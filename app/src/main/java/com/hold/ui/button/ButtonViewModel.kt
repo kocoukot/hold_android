@@ -64,7 +64,7 @@ class ButtonViewModel(
             ButtonActions.ClickOnPay -> payForGame()
             ButtonActions.ClickOnPayDay -> {}
             ButtonActions.ClickOnPayOnce -> {}
-            ButtonActions.ClickOnWatchAdd -> {}
+            ButtonActions.ClickOnWatchAdd -> showAd()
 
         }
     }
@@ -194,6 +194,10 @@ class ButtonViewModel(
 
     private fun payForGame() {
         _state.value = _state.value.copy(endgameState = EndgameState.PAY_AMOUNT)
+    }
+
+    private fun showAd() {
+        _steps.value = ButtonRoute.ShowAd
     }
 
 

@@ -24,6 +24,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-8364051315582457~5303783987" />
 
         <service android:name="com.hold.service.AuthenticatorService">
             <intent-filter>

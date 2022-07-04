@@ -1,6 +1,5 @@
 package com.hold.ui.button.content
 
-import android.widget.Toast
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -187,11 +186,6 @@ fun EndGameContent(
                         negativeButtonText,
                         negativeButtonType
                     ) {
-                        Toast.makeText(
-                            context,
-                            "Showing toast....${negativeButtonAction}",
-                            Toast.LENGTH_SHORT
-                        ).show()
                         onActionClicked(negativeButtonAction)
                     }
                 }
