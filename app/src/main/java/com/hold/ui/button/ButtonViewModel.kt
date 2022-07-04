@@ -89,17 +89,25 @@ class ButtonViewModel(
     private fun closeEndGame() {
         viewModelScope.launch {
             _state.value.endGameData?.currentValue?.let { current ->
-                saveNewResultUseCase.invoke(current)
+                kotlin.runCatching {
+                    saveNewResultUseCase.invoke(current)
+                }
+                    .onSuccess {
+                        _state.value = _state.value.copy(timer = null)
+                        _state.value =
+                            _state.value.copy(endgameState = EndgameState.END_OR_CONTINUE)
+                        if (_state.value.gameUser == null || _state.value.gameUser?.userName?.isEmpty() == true) {
+                            _state.value = _state.value.copy(gameState = GameState.USERNAME_INPUT)
+                        } else {
+                            _state.value = _state.value.copy(gameState = GameState.BUTTON)
+                        }
+                    }
+                    .onFailure {
+                        _state.value =
+                            _state.value.copy(errorText = it.localizedMessage ?: "Some error1 =(")
+                    }
             }
-            _state.value = _state.value.copy(timer = null)
         }
-        _state.value = _state.value.copy(endgameState = EndgameState.END_OR_CONTINUE)
-        if (_state.value.gameUser == null || _state.value.gameUser?.userName?.isEmpty() == true) {
-            _state.value = _state.value.copy(gameState = GameState.USERNAME_INPUT)
-        } else {
-            _state.value = _state.value.copy(gameState = GameState.BUTTON)
-        }
-
     }
 
     private fun nicknameSave(nickName: String) {
@@ -107,10 +115,18 @@ class ButtonViewModel(
         viewModelScope.launch {
             var data = getUserNameUseCase.getName() ?: GameUser()// _state.value.gameUser
             data = data.copy(userName = nickName)
-            data.let {
-                saveUserNameUseCase.saveName(nickName)
-                _state.value = _state.value.copy(gameUser = it)
-                _state.value = _state.value.copy(gameState = GameState.BUTTON)
+            data.let { user ->
+                kotlin.runCatching {
+                    saveUserNameUseCase.saveName(nickName, true)
+                }
+                    .onSuccess {
+                        _state.value = _state.value.copy(gameUser = user)
+                        _state.value = _state.value.copy(gameState = GameState.BUTTON)
+                    }
+                    .onFailure {
+                        _state.value =
+                            _state.value.copy(errorText = it.localizedMessage ?: "Some error! =(")
+                    }
             }
         }
     }
@@ -127,18 +143,12 @@ class ButtonViewModel(
             date = stopTime,
             result = stopTime - startTime
         )
-        viewModelScope.launch {
-            println("new record $newRecord")
-//            saveNewResultUseCase.invoke(newRecord)
-        }
-
         setEndGameData(newRecord)
     }
 
     private fun setEndGameData(newValue: GameResult) {
         viewModelScope.launch {
             val gameRecord = getUserLocalRecordUseCase.invoke()
-            Timber.d("gameRecord $gameRecord")
             _state.value = _state.value.copy(
                 endGameData = EndgameModel(
                     recordValue = gameRecord,

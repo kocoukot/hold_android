@@ -2,13 +2,16 @@ package com.hold.di
 
 
 import com.google.gson.GsonBuilder
+import com.hold.BuildConfig
 import com.hold.data.ext.RetrofitConverterFactory
-import com.hold.data.network.support.ApiKeyInterceptor
+import com.hold.data.network.Path
+import com.hold.data.network.service.LeaderboardService
+import com.hold.data.network.service.UserService
 import com.hold.data.network.support.ServiceErrorHandler
-import com.hold.data.network.support.SessionIdInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.core.parameter.ParametersHolder
+import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -28,8 +31,6 @@ val networkModule = module {
 
     single {
         OkHttpClient.Builder()
-            .addInterceptor(ApiKeyInterceptor())
-            .addInterceptor(SessionIdInterceptor(get()))
             .addInterceptor(
                 HttpLoggingInterceptor()
                     .setLevel(HttpLoggingInterceptor.Level.BODY)
@@ -44,7 +45,7 @@ val networkModule = module {
         val path = parameters.getOrNull<String>()
         Retrofit.Builder()
             .client(get())
-//            .baseUrl("${BuildConfig.API_GATEWAY}/$path/")
+            .baseUrl("${BuildConfig.API_GATEWAY}/$path/")
             .addConverterFactory(RetrofitConverterFactory(get()))
             .addCallAdapterFactory(RxJava2CallAdapterFactory.createAsync())
             .build()
@@ -54,44 +55,14 @@ val networkModule = module {
     single { ServiceErrorHandler(get()) }
 
 
-//    single {
-//        get<Retrofit> { parametersOf(Path.EMAIL) }
-//            .create(EmailService::class.java)
-//    }
-//
-//    single {
-//        get<Retrofit> { parametersOf(Path.AUTH) }
-//            .create(AuthService::class.java)
-//    }
-//
-//    single {
-//        get<Retrofit> { parametersOf(Path.PROFILE) }
-//            .create(ProfileService::class.java)
-//}
-//
-//    single {
-//        get<Retrofit> { parametersOf(Path.EMERGENCY_CONTACTS) }
-//            .create(BuyerService::class.java)
-//    }
-//
-//    single {
-//        get<Retrofit> { parametersOf(Path.HOME) }
-//            .create(SellerService::class.java)
-//    }
-//
-//    single {
-//        get<Retrofit> { parametersOf(Path.STORE) }
-//            .create(PublicService::class.java)
-//    }
-//
-//    single {
-//        get<Retrofit> { parametersOf(Path.RESERVATION) }
-//            .create(PublicService::class.java)
-//    }
-//
-//    single {
-//        get<Retrofit>(GoogleRetrofit)
-//            .create(GoogleOAuthService::class.java)
-//    }
+    single {
+        get<Retrofit> { parametersOf(Path.USER) }
+            .create(UserService::class.java)
+    }
+
+    single {
+        get<Retrofit> { parametersOf(Path.USER) }
+            .create(LeaderboardService::class.java)
+    }
 
 }

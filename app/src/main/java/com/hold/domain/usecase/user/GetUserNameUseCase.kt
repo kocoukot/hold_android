@@ -7,5 +7,5 @@ class GetUserNameUseCase(
     private val accountRepository: AccountRepository,
 ) {
 
-    suspend fun getName() = accountRepository.getUserName()
+    suspend fun getName() = accountRepository.getUser()
 }

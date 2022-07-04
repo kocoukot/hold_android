@@ -8,14 +8,15 @@ interface AccountRepository {
 
     var sessionToken: String
 
+    suspend fun saveUserName(userName: String, isNew: Boolean): Boolean
+
     suspend fun setNewResult(result: GameResult)
 
     suspend fun getUserResults(): GameUser?
 
     suspend fun getRecord(): GameResult?
 
-    suspend fun saveUserName(userName: String)
 
-    suspend fun getUserName(): GameUser?
+    suspend fun getUser(): GameUser?
 
 }

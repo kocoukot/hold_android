@@ -1,5 +1,6 @@
 package com.hold.di
 
+import com.hold.domain.usecase.SetSessionTokenUseCase
 import com.hold.domain.usecase.user.*
 import org.koin.dsl.module
 
@@ -17,6 +18,7 @@ val useCaseModule = module {
 
     factory { SaveUserNameUseCase(get()) }
 
+    factory { SetSessionTokenUseCase(get()) }
 }
 
 

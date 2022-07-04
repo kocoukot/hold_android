@@ -6,8 +6,12 @@ import com.hold.domain.model.user.GameUser
 
 class GameRepositoryImpl : GameRepository {
 
+    override suspend fun getGlobalResults(): List<GameUser> {
+        return emptyList()
+    }
 
-    override suspend fun getGlobalResults(): List<GameUser> = listOf(
+
+    override suspend fun getGlobalMockResults(): List<GameUser> = listOf(
         GameUser(
             id = "sdfasdfs",
             avatar = "",

@@ -2,15 +2,18 @@ package com.hold
 
 import android.app.Application
 import com.hold.di.*
+import com.hold.domain.usecase.SetSessionTokenUseCase
+import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 import timber.log.Timber
+import java.util.*
 
 
 class HoldApplication : Application() {
 
-//    private val setFcmTokenUseCase: SetFcmTokenUseCase by inject()
+    private val setSessionTokenUseCase: SetSessionTokenUseCase by inject()
 
     override fun onCreate() {
         super.onCreate()
@@ -18,16 +21,12 @@ class HoldApplication : Application() {
         instance = this
 
         startTimber()
-//        startFacebookSDK()
         startKoin {
             androidLogger()
             androidContext(this@HoldApplication)
             modules(*presentationModules + networkModule + useCaseModule + repositoryModule + storageModule)
         }
-//        startAppsFlyerSDK()
-//        startFireBaseNotification()
-
-
+        setSessionTokenUseCase.invoke(UUID.randomUUID().toString())
     }
 
     private fun startTimber() = Timber.plant(Timber.DebugTree())

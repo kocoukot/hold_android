@@ -75,6 +75,16 @@ class AccountStorage(
         return accountManager.setUserData(currentAccount, USER, gson.toJson(user))
     }
 
+    fun updateUserId(userId: String) = updateUserId(getOrCreateAccount(), userId)
+
+    private fun updateUserId(currentAccount: Account, userId: String) {
+        var user = accountManager.getUserData(currentAccount, USER)
+            ?.takeIf { it.isNotEmpty() }
+            ?.let { gson.fromJson(it, GameUser::class.java) } ?: GameUser()
+        user = user.copy(id = userId)
+        return accountManager.setUserData(currentAccount, USER, gson.toJson(user))
+    }
+
     fun getUserName(): GameUser? = accountManager.getUserData(getOrCreateAccount(), USER)
         ?.let { gson.fromJson(it, GameUser::class.java) }
 

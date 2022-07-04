@@ -7,5 +7,6 @@ class SaveUserNameUseCase(
     private val accountRepository: AccountRepository,
 ) {
 
-    suspend fun saveName(userName: String) = accountRepository.saveUserName(userName)
+    suspend fun saveName(userName: String, isNew: Boolean) =
+        accountRepository.saveUserName(userName, isNew)
 }
