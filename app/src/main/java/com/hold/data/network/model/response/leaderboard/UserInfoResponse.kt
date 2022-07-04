@@ -4,6 +4,6 @@ import com.google.gson.annotations.SerializedName
 
 class UserInfoResponse(
     @SerializedName("userId") val userId: String,
-    @SerializedName("userName") val userName: String,
-    @SerializedName("avatar") val avatar: String,
+    @SerializedName("userName") val userName: String?,
+    @SerializedName("avatar") val avatar: String?,
 )

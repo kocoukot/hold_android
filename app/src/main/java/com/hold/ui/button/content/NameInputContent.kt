@@ -72,9 +72,11 @@ fun NameInputContent(
                     keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
                     value = inputText,
                     onValueChange = {
-                        inputText = it
-                        buttonType =
-                            if (it.isEmpty()) EndgameButtons.SAVE_NICKNAME_EMPTY else EndgameButtons.SAVE_NICKNAME
+                        if (it.length < 20) {
+                            inputText = it
+                            buttonType =
+                                if (it.isEmpty()) EndgameButtons.SAVE_NICKNAME_EMPTY else EndgameButtons.SAVE_NICKNAME
+                        }
                     },
                     placeholder = {
                         Text(

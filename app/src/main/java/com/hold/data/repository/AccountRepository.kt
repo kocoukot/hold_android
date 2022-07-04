@@ -12,11 +12,6 @@ interface AccountRepository {
 
     suspend fun setNewResult(result: GameResult)
 
-    suspend fun getUserResults(): GameUser?
-
-    suspend fun getRecord(): GameResult?
-
-
     suspend fun getUser(): GameUser?
 
 }

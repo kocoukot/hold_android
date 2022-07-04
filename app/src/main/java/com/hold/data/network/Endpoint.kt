@@ -10,7 +10,7 @@ object Endpoint {
 
 
     object Leaderboard {
-        const val GET_USER_RESULTS = "global-results"
-        const val GET_GLOBAL_RESULTS = "user-results"
+        const val GET_GLOBAL_RESULTS = "global-results"
+        const val GET_USER_RESULTS = "user-results"
     }
 }

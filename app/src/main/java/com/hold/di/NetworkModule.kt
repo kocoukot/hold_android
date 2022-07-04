@@ -61,7 +61,7 @@ val networkModule = module {
     }
 
     single {
-        get<Retrofit> { parametersOf(Path.USER) }
+        get<Retrofit> { parametersOf(Path.LEADERBOARD) }
             .create(LeaderboardService::class.java)
     }
 

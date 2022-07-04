@@ -6,7 +6,6 @@ import com.hold.data.network.model.request.ResultRequest
 import com.hold.data.network.model.request.UpdateUserRequest
 import com.hold.data.network.service.UserService
 import com.hold.domain.model.user.GameResult
-import com.hold.domain.model.user.GameUser
 
 class AccountRepositoryImpl(
     private val accountStorage: AccountStorage,
@@ -36,7 +35,6 @@ class AccountRepositoryImpl(
         }.also {
             accountStorage.saveName(userName)
         }
-
     }
 
     override suspend fun setNewResult(result: GameResult) {
@@ -48,16 +46,7 @@ class AccountRepositoryImpl(
             )
         )
         accountStorage.setNewResult(result)
-
     }
-
-
-    override suspend fun getUserResults(): GameUser = accountStorage.getUserResults() ?: GameUser()
-
-    override suspend fun getRecord(): GameResult? = accountStorage.getUserResults()
-        ?.records
-        ?.takeIf { it.isNotEmpty() }
-        ?.maxWithOrNull(Comparator.comparingLong { it.result })
 
     override suspend fun getUser() = accountStorage.getUserName()
 }

@@ -9,7 +9,7 @@ import com.hold.domain.model.EndgameModel
 import com.hold.domain.model.EndgameState
 import com.hold.domain.model.user.GameResult
 import com.hold.domain.model.user.GameUser
-import com.hold.domain.usecase.user.GetUserLocalRecordUseCase
+import com.hold.domain.usecase.leaderboard.GetUserLocalRecordUseCase
 import com.hold.domain.usecase.user.GetUserNameUseCase
 import com.hold.domain.usecase.user.SaveNewResultUseCase
 import com.hold.domain.usecase.user.SaveUserNameUseCase
