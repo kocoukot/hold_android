@@ -11,7 +11,7 @@ buildscript {
             version_major = 0
             version_minor = 1
             version_patch = 1
-            build_number = Integer.valueOf(System.getenv("BITRISE_BUILD_NUMBER") ?: 0)
+            build_number = 2
         }
 
         repositories {
