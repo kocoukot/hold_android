@@ -4,7 +4,10 @@ import android.content.Context
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import com.kocoukot.holdgame.common.ext.cast
-import com.kocoukot.holdgame.data.local.*
+import com.kocoukot.holdgame.data.local.AccountStorage
+import com.kocoukot.holdgame.data.local.AssetsStorage
+import com.kocoukot.holdgame.data.local.ObjectsSharedPreferencesStorage
+import com.kocoukot.holdgame.data.local.SharedPreferencesStorage
 import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module
 
@@ -40,7 +43,5 @@ val storageModule = module {
     single { ObjectsSharedPreferencesStorage(get(), get()) }
 
     single { AssetsStorage(get()) }
-
-    single { MediaStorage(get()) }
 
 }

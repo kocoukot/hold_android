@@ -110,15 +110,15 @@ dependencies {
     retrofit()
     google()
     rxJava()
-    paging()
+//    paging()
     koin()
     nav()
-    adapterDelegates()
+//    adapterDelegates()
     firebase()
 
     okhttp()
     glide()
-    compression()
+//    compression()
     jetpackCompose()
 
     // Timber
