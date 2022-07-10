@@ -13,7 +13,6 @@ import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
-import com.google.android.gms.ads.rewarded.RewardItem
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import com.kocoukot.holdgame.BuildConfig
@@ -61,8 +60,10 @@ class ButtonFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        adInit()
+    }
 
-
+    private fun adInit() {
         RewardedAd.load(
             requireContext(),
             BuildConfig.GOOGLE_WATCH_KEY,
@@ -72,56 +73,59 @@ class ButtonFragment : Fragment() {
                     Timber.d("ad was not loaded")
                     Log.d(TAG, adError.toString())
                     mRewardedAd = null
+                    viewModel.onAddLoaded(false)
                 }
 
                 override fun onAdLoaded(rewardedAd: RewardedAd) {
                     Timber.d("ad was loaded")
                     mRewardedAd = rewardedAd
+                    viewModel.onAddLoaded(true)
                 }
             })
 
-        mRewardedAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
-            override fun onAdClicked() {
-                // Called when a click is recorded for an ad.
-                Log.d(TAG, "Ad was clicked.")
-            }
-
-            override fun onAdDismissedFullScreenContent() {
-                // Called when ad is dismissed.
-                // Set the ad reference to null so you don't show the ad a second time.
-                Log.d(TAG, "Ad dismissed fullscreen content.")
-                mRewardedAd = null
-            }
-
-            override fun onAdFailedToShowFullScreenContent(adError: AdError) {
-                // Called when ad fails to show.
-                Log.e(TAG, "Ad failed to show fullscreen content.")
-                mRewardedAd = null
-            }
-
-            override fun onAdImpression() {
-                // Called when an impression is recorded for an ad.
-                Log.d(TAG, "Ad recorded an impression.")
-            }
-
-            override fun onAdShowedFullScreenContent() {
-                // Called when ad is shown.
-                Log.d(TAG, "Ad showed fullscreen content.")
-            }
-        }
     }
 
     private fun showAd() {
         if (mRewardedAd != null) {
             mRewardedAd?.show(requireActivity()) {
-                fun onUserEarnedReward(rewardItem: RewardItem) {
-                    var rewardAmount = rewardItem.amount
-                    var rewardType = rewardItem.type
-                    Log.d(TAG, "User earned the reward.")
-                }
+                mRewardedAd?.fullScreenContentCallback = adCallBack
+
+                Timber.d("ad was User earned the reward. rewardAmount ")
+                viewModel.onUserWatchedAd()
             }
         } else {
-            Log.d(TAG, "The rewarded ad wasn't ready yet.")
+            Timber.d("ad was rewarded ad wasn't ready yet.")
+        }
+    }
+
+    private val adCallBack = object : FullScreenContentCallback() {
+        override fun onAdClicked() {
+            // Called when a click is recorded for an ad.
+            Timber.d("ad was clicked.")
+        }
+
+        override fun onAdDismissedFullScreenContent() {
+            // Called when ad is dismissed.
+            // Set the ad reference to null so you don't show the ad a second time.
+            Timber.d("ad was dismissed fullscreen content..")
+            adInit()
+            mRewardedAd = null
+        }
+
+        override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+            // Called when ad fails to show.
+            Timber.d("ad was failed to show fullscreen content.")
+            mRewardedAd = null
+        }
+
+        override fun onAdImpression() {
+            // Called when an impression is recorded for an ad.
+            Timber.d("ad was recorded an impression.")
+        }
+
+        override fun onAdShowedFullScreenContent() {
+            // Called when ad is shown.
+            Timber.d("ad was showed fullscreen content.")
         }
     }
 

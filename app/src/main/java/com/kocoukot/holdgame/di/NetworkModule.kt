@@ -7,6 +7,7 @@ import com.kocoukot.holdgame.data.ext.RetrofitConverterFactory
 import com.kocoukot.holdgame.data.network.Path
 import com.kocoukot.holdgame.data.network.service.LeaderboardService
 import com.kocoukot.holdgame.data.network.service.UserService
+import com.kocoukot.holdgame.data.network.support.ApiKeyInterceptor
 import com.kocoukot.holdgame.data.network.support.ServiceErrorHandler
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -31,6 +32,7 @@ val networkModule = module {
 
     single {
         OkHttpClient.Builder()
+            .addInterceptor(ApiKeyInterceptor())
             .addInterceptor(
                 HttpLoggingInterceptor()
                     .setLevel(HttpLoggingInterceptor.Level.BODY)

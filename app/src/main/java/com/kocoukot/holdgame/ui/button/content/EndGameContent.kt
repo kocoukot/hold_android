@@ -28,6 +28,7 @@ import com.kocoukot.holdgame.utils.DateUtil
 fun EndGameContent(
     endGameState: EndgameState,
     endGameModel: EndgameModel,
+    isAddLoaded: Boolean,
     onActionClicked: (ButtonActions) -> Unit
 ) {
     val record = endGameModel.recordValue?.result ?: 0
@@ -123,19 +124,20 @@ fun EndGameContent(
                     }
 
 
-
-                    AnswerButton(
-                        modifier = Modifier
-                            .weight(1f)
-                            .animateContentSize(
-                                animationSpec = tween(
-                                    durationMillis = 300,
-                                )
-                            ),
-                        positiveButtonText,
-                        positiveButtonType
-                    ) {
-                        onActionClicked(positiveButtonAction)
+                    if (isAddLoaded) {
+                        AnswerButton(
+                            modifier = Modifier
+                                .weight(1f)
+                                .animateContentSize(
+                                    animationSpec = tween(
+                                        durationMillis = 300,
+                                    )
+                                ),
+                            positiveButtonText,
+                            positiveButtonType
+                        ) {
+                            onActionClicked(positiveButtonAction)
+                        }
                     }
 
 

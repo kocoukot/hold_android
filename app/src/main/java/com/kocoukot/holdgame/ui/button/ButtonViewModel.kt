@@ -17,10 +17,10 @@ import com.kocoukot.holdgame.ui.button.model.ButtonActions
 import com.kocoukot.holdgame.ui.button.model.ButtonRoute
 import com.kocoukot.holdgame.ui.button.model.GameState
 import com.kocoukot.holdgame.ui.button.model.MainGameState
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class ButtonViewModel(
     private val saveNewResultUseCase: SaveNewResultUseCase,
@@ -87,31 +87,36 @@ class ButtonViewModel(
     }
 
     private fun closeEndGame() {
+        _state.value = _state.value.copy(isLoading = true)
         viewModelScope.launch {
             _state.value.endGameData?.currentValue?.let { current ->
-                kotlin.runCatching {
-                    saveNewResultUseCase.invoke(current)
-                }
+                kotlin.runCatching { saveNewResultUseCase.invoke(current) }
                     .onSuccess {
-                        _state.value = _state.value.copy(timer = null)
                         _state.value =
-                            _state.value.copy(endgameState = EndgameState.END_OR_CONTINUE)
+                            _state.value.copy(
+                                endgameState = EndgameState.END_OR_CONTINUE,
+                                timer = null
+                            )
                         if (_state.value.gameUser == null || _state.value.gameUser?.userName?.isEmpty() == true) {
                             _state.value = _state.value.copy(gameState = GameState.USERNAME_INPUT)
                         } else {
                             _state.value = _state.value.copy(gameState = GameState.BUTTON)
                         }
+                        _state.value = _state.value.copy(isLoading = false)
                     }
                     .onFailure {
                         _state.value =
-                            _state.value.copy(errorText = it.localizedMessage ?: "Some error1 =(")
+                            _state.value.copy(
+                                errorText = it.localizedMessage ?: "Some error1 =(",
+                                isLoading = false
+                            )
                     }
             }
         }
     }
 
     private fun nicknameSave(nickName: String) {
-        Timber.d("nicknameSave $nickName")
+        _state.value = _state.value.copy(isLoading = true)
         viewModelScope.launch {
             var data = getUserNameUseCase.getName() ?: GameUser()// _state.value.gameUser
             data = data.copy(userName = nickName)
@@ -120,12 +125,18 @@ class ButtonViewModel(
                     saveUserNameUseCase.saveName(nickName, true)
                 }
                     .onSuccess {
-                        _state.value = _state.value.copy(gameUser = user)
-                        _state.value = _state.value.copy(gameState = GameState.BUTTON)
+                        _state.value = _state.value.copy(
+                            gameUser = user,
+                            gameState = GameState.BUTTON,
+                            isLoading = false
+                        )
                     }
                     .onFailure {
                         _state.value =
-                            _state.value.copy(errorText = it.localizedMessage ?: "Some error! =(")
+                            _state.value.copy(
+                                errorText = it.localizedMessage ?: "Some error! =(",
+                                isLoading = false
+                            )
                     }
             }
         }
@@ -153,19 +164,26 @@ class ButtonViewModel(
                 endGameData = EndgameModel(
                     recordValue = gameRecord,
                     currentValue = newValue,
-                )
+
+                    ),
+                couldContinue = false,
+                gameState = GameState.END_GAME
             )
-            _state.value = _state.value.copy(gameState = GameState.END_GAME)
         }
     }
 
 
     private fun startTimer() {
         viewModelScope.launch {
-            _state.value = _state.value.copy(timer = null)
+            if (!_state.value.couldContinue) {
+                _state.value = _state.value.copy(timer = null)
+                startTime = System.currentTimeMillis()
+            } else {
+                startTime = System.currentTimeMillis() - (_state.value.timer ?: 0L)
+            }
+
             _state.value =
                 _state.value.copy(gameRecord = getUserLocalRecordUseCase.invoke()?.result)
-            startTime = System.currentTimeMillis()
             handler.postDelayed({
                 update()
             }, 0)
@@ -197,7 +215,23 @@ class ButtonViewModel(
     }
 
     private fun showAd() {
-        _steps.value = ButtonRoute.ShowAd
+        viewModelScope.launch {
+            delay(3000)
+            onUserWatchedAd()
+        }
+//        _steps.value = ButtonRoute.ShowAd
+    }
+
+    fun onAddLoaded(isLoaded: Boolean) {
+        _state.value = _state.value.copy(isAddLoaded = isLoaded)
+    }
+
+    fun onUserWatchedAd() {
+        _state.value = _state.value.copy(
+            gameState = GameState.BUTTON,
+            couldContinue = true,
+            endgameState = EndgameState.END_OR_CONTINUE
+        )
     }
 
 

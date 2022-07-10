@@ -32,6 +32,7 @@ fun LeaderboardScreeContent(viewModel: LeaderboardViewModel) {
     if (state.value.isLoading) {
         DialogLoadingContent()
     }
+
     Scaffold(
         topBar = {
             TopAppBar(

@@ -45,11 +45,12 @@ class ProfileViewModel(
     }
 
     private fun saveUsername(nickname: String) {
+        _state.value = _state.value.copy(isLoading = true)
         viewModelScope.launch {
             kotlin.runCatching { saveUserNameUseCase.saveName(nickname, false) }
                 .onSuccess { _steps.value = ProfileRoute.OnBack }
                 .onFailure { _state.value = _state.value.copy(errorText = it.localizedMessage) }
-
+            _state.value = _state.value.copy(isLoading = false)
         }
     }
 }

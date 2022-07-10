@@ -36,9 +36,9 @@ android {
         versionCode computeVersionCode()
         versionName computeVersionName()
 
-//        buildConfigField "String", "API_GATEWAY", '"https://holdtest.herokuapp.com"'
-        buildConfigField "String", "API_GATEWAY", '"http://0.0.0.0:8080"'
-        buildConfigField "String", "API_KEY", '"s&m321"'
+        buildConfigField "String", "API_GATEWAY", '"https://holdtest.herokuapp.com"'
+//        buildConfigField "String", "API_GATEWAY", '"http://0.0.0.0:8080"'
+        buildConfigField "String", "API_KEY", '"asbhub43b52kj3h4b2jg3v62jl24bjldf"'
         buildConfigField "String", "GOOGLE_WATCH_KEY", '"ca-app-pub-8364051315582457/8358426381"'
 
         signingConfigs {

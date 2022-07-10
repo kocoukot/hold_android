@@ -51,12 +51,12 @@ class LeaderboardViewModel(
                             worldRecordRecords = globalUsers.await()
                         )
                     )
+                    _state.value = _state.value.copy(isLoading = false)
                 } catch (e: Exception) {
+                    _state.value = _state.value.copy(isLoading = false)
                     _state.value =
                         _state.value.copy(errorText = e.localizedMessage ?: "Oops! Some error :(")
                 }
-            }.also {
-                _state.value = _state.value.copy(isLoading = false)
             }
         }
 
@@ -76,16 +76,6 @@ class LeaderboardViewModel(
 
     private fun clickOnChangeRecords(record: RecordType) {
         _state.value = _state.value.copy(selectedRecords = record)
-    }
-
-
-    fun onMyRecordsClicked() {
-
-
-    }
-
-    fun onWorldRecordsClicked() {
-//        state.records = user.records
     }
 }
 

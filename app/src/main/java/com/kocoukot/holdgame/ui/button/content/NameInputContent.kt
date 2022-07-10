@@ -21,7 +21,6 @@ import com.kocoukot.holdgame.R
 import com.kocoukot.holdgame.common.compose.theme.HTheme
 import com.kocoukot.holdgame.domain.model.EndgameButtons
 import com.kocoukot.holdgame.ui.common.compose.AnswerButton
-import timber.log.Timber
 
 
 @Composable
@@ -109,8 +108,7 @@ fun NameInputContent(
                 buttonText = stringResource(id = R.string.save_text),
                 buttonType = buttonType,
                 onButtonClick = {
-                    Timber.d("nicknameSave $inputText")
-                    saveName.invoke(inputText)
+                    saveName.invoke(inputText.trim())
                 },
             )
         }
