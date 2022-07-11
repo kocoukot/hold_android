@@ -14,6 +14,9 @@ ext {
     accompanist_version = "0.16.0"
     lifecycle_version = "2.4.0-alpha03"
     compose_version = "1.1.1"
+    billing_version = "5.0.0"
+
+
 
 
     jetpackCompose = dependencyGroup {
@@ -52,7 +55,6 @@ ext {
 
     }
 
-
     kotlin = dependencyGroup {
         implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     }
@@ -63,12 +65,13 @@ ext {
         implementation 'com.google.maps.android:android-maps-utils:2.2.2'
         implementation 'com.google.android.libraries.places:places:2.4.0'
         implementation 'com.google.code.gson:gson:2.8.6'
+        implementation 'com.google.android.gms:play-services-ads:21.0.0'
+        implementation("com.android.billingclient:billing-ktx:$billing_version")
     }
 
-    facebook = dependencyGroup {
-        implementation 'com.facebook.android:facebook-login:8.1.0'
-
-    }
+//    facebook = dependencyGroup {
+//        implementation 'com.facebook.android:facebook-login:8.1.0'
+//    }
 
     firebase = dependencyGroup {
         implementation platform('com.google.firebase:firebase-bom:30.1.0')
@@ -94,10 +97,10 @@ ext {
         implementation "io.reactivex.rxjava2:rxkotlin:2.4.0"
     }
 
-    paging = dependencyGroup{
-        implementation "androidx.paging:paging-runtime:$paging_version"
-        implementation "androidx.paging:paging-rxjava2:$paging_version"
-    }
+//    paging = dependencyGroup{
+//        implementation "androidx.paging:paging-runtime:$paging_version"
+//        implementation "androidx.paging:paging-rxjava2:$paging_version"
+//    }
 
     androidX = dependencyGroup {
         implementation 'androidx.core:core-ktx:1.5.0-rc01'
@@ -123,24 +126,16 @@ ext {
         implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
         implementation "androidx.navigation:navigation-dynamic-features-fragment:$nav_version"
     }
-
-    adapterDelegates = dependencyGroup {
-        implementation "com.hannesdorfmann:adapterdelegates4-kotlin-dsl:$adapter_delegates_version"
-        implementation "com.hannesdorfmann:adapterdelegates4-kotlin-dsl-layoutcontainer:$adapter_delegates_version"
-        implementation "com.hannesdorfmann:adapterdelegates4-kotlin-dsl-viewbinding:$adapter_delegates_version"
-    }
+//
+//    adapterDelegates = dependencyGroup {
+//        implementation "com.hannesdorfmann:adapterdelegates4-kotlin-dsl:$adapter_delegates_version"
+//        implementation "com.hannesdorfmann:adapterdelegates4-kotlin-dsl-layoutcontainer:$adapter_delegates_version"
+//        implementation "com.hannesdorfmann:adapterdelegates4-kotlin-dsl-viewbinding:$adapter_delegates_version"
+//    }
 
     glide = dependencyGroup {
         implementation 'com.github.bumptech.glide:glide:4.12.0'
         annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
-    }
-
-    compression = dependencyGroup {
-        implementation 'id.zelory:compressor:3.0.1'
-    }
-
-    stripe = dependencyGroup {
-        implementation 'com.stripe:stripe-android:16.1.0'
     }
 }
 
