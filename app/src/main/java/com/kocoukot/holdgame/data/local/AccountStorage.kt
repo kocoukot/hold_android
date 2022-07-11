@@ -23,7 +23,11 @@ class AccountStorage(
         get() {
             return getAccount()
                 ?.let { account ->
-                    accountManager.getUserData(account, SAVED_TIMER)?.toLong()
+                    try {
+                        accountManager.getUserData(account, SAVED_TIMER)?.toLong()
+                    } catch (e: Exception) {
+                        null
+                    }
                 }
         }
         set(value) {

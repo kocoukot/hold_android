@@ -10,6 +10,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.android.billingclient.api.*
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
@@ -24,6 +25,9 @@ import com.kocoukot.holdgame.ui.common.Constant.ONE_DAY_PRODUCT_ID
 import com.kocoukot.holdgame.ui.common.Constant.ONE_TRY_PRODUCT_ID
 import com.kocoukot.holdgame.ui.common.ext.navController
 import com.kocoukot.holdgame.ui.common.ext.observeNonNull
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
@@ -53,9 +57,10 @@ class ButtonFragment : Fragment() {
                             Toast.LENGTH_SHORT
                         ).show()
                         viewModel.onUserGotOneMoreTry()
+                        handlePurchase(purchases.first())
                     }
-
                     purchases.first().products.first().equals(ONE_TRY_PRODUCT_ID) -> {
+                        handlePurchase(purchases.first())
                         viewModel.onUserGotOneMoreTry()
                     }
                 }
@@ -226,5 +231,18 @@ class ButtonFragment : Fragment() {
             .setProductDetailsParamsList(productDetailsParamsList)
             .build()
         billingClient.launchBillingFlow(requireActivity(), billingFlowParams)
+    }
+
+    private fun handlePurchase(purchase: Purchase) {
+        val consumeParams =
+            ConsumeParams.newBuilder()
+                .setPurchaseToken(purchase.purchaseToken)
+                .build()
+        val consumeResult = lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                billingClient.consumePurchase(consumeParams)
+
+            }
+        }
     }
 }
