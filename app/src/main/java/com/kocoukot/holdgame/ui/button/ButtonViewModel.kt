@@ -18,7 +18,6 @@ import com.kocoukot.holdgame.ui.button.model.ButtonActions
 import com.kocoukot.holdgame.ui.button.model.ButtonRoute
 import com.kocoukot.holdgame.ui.button.model.GameState
 import com.kocoukot.holdgame.ui.button.model.MainGameState
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -216,11 +215,11 @@ class ButtonViewModel(
     }
 
     private fun showAd() {
-        viewModelScope.launch {
-            delay(1000)
-            onUserWatchedAd()
-        }
-//        _steps.value = ButtonRoute.ShowAd
+//        viewModelScope.launch {
+//            delay(1000)
+//            onUserWatchedAd()
+//        }
+        _steps.value = ButtonRoute.ShowAd
     }
 
     fun onAddLoaded(isLoaded: Boolean) {
@@ -244,6 +243,4 @@ class ButtonViewModel(
             _steps.value = ButtonRoute.LaunchBill(it)
         }
     }
-
-
 }
