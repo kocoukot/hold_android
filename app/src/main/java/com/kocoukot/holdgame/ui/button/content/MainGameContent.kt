@@ -15,6 +15,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.ProgressIndicatorDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -46,6 +47,15 @@ fun MainGameContent(
     val interactionSource = remember { MutableInteractionSource() }
     val interactions = remember { mutableStateListOf<Interaction>() }
     var hintVisibility by remember { mutableStateOf(true) }
+
+
+    val progress = ((timer ?: 0.0).toFloat() / record.toFloat()).coerceAtLeast(0f)
+    val progressOffset = (1 - progress)
+    val animatedProgress by animateFloatAsState(
+        targetValue = progressOffset,
+        animationSpec = ProgressIndicatorDefaults.ProgressAnimationSpec
+    )
+
 
     val isPressed = remember { mutableStateOf(false) }
     val buttonColor =
@@ -165,10 +175,11 @@ fun MainGameContent(
 
             if (timer != null && timer > 0) {
                 Timber.d("record $record")
-                CustomComponent(
-                    duration = record,
-                    canvasSize = 230.dp,
-                    foregroundIndicatorStrokeWidth = 45f
+
+                CircularProgressWithThumb(
+                    progress = animatedProgress,
+                    strokeWidth = 15.dp,
+                    //  modifier = Modifier.fillMaxSize()
                 )
             }
         }

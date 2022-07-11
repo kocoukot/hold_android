@@ -106,6 +106,7 @@ android {
 apply from: '../dependencies.gradle'
 
 dependencies {
+    implementation 'com.google.android.gms:play-services-analytics-impl:18.0.1'
     androidX()
     retrofit()
     google()

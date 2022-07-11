@@ -9,10 +9,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.android.billingclient.api.BillingClient
-import com.android.billingclient.api.BillingClientStateListener
-import com.android.billingclient.api.BillingResult
-import com.android.billingclient.api.PurchasesUpdatedListener
+import com.android.billingclient.api.*
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
@@ -33,15 +30,24 @@ class ButtonFragment : Fragment() {
     private var TAG = "MainActivity"
     private val adRequest = AdRequest.Builder().build()
 
+    private val billingClient by lazy {
+        BillingClient.newBuilder(requireContext())
+            .setListener(purchasesUpdatedListener)
+            .enablePendingPurchases()
+            .build()
+    }
+
     private val purchasesUpdatedListener =
         PurchasesUpdatedListener { billingResult, purchases ->
-            // To be implemented in a later section.
+            if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
+                getProductsList()
+            } else if (billingResult.responseCode == BillingClient.BillingResponseCode.USER_CANCELED) {
+                // Handle an error caused by a user cancelling the purchase flow.
+            } else {
+                // Handle any other error codes.
+            }
         }
 
-    private var billingClient = BillingClient.newBuilder(requireContext())
-        .setListener(purchasesUpdatedListener)
-        .enablePendingPurchases()
-        .build()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,6 +61,7 @@ class ButtonFragment : Fragment() {
                 ButtonRoute.ToProfile -> navController.navigate(R.id.action_buttonFragment_to_profileFragment)
                 ButtonRoute.CloseApp -> requireActivity().finish()
                 ButtonRoute.ShowAd -> showAd()
+                is ButtonRoute.LaunchBill -> launchBillFlow(route.product)
             }
         }
         activity?.window?.apply {
@@ -75,6 +82,7 @@ class ButtonFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         adInit()
+        billStartConnection()
     }
 
     private fun adInit() {
@@ -145,19 +153,74 @@ class ButtonFragment : Fragment() {
 
 
     private fun billStartConnection() {
+
         billingClient.startConnection(object : BillingClientStateListener {
             override fun onBillingSetupFinished(billingResult: BillingResult) {
                 if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                    // The BillingClient is ready. You can query purchases here.
+                    getProductsList()
                 }
             }
 
             override fun onBillingServiceDisconnected() {
                 billStartConnection()
-                // Try to restart the connection on the next request to
-                // Google Play by calling the startConnection() method.
             }
         })
     }
+
+    private fun getProductsList() {
+        val queryProductDetailsParams =
+            QueryProductDetailsParams.newBuilder()
+                .setProductList(
+                    listOf(
+                        QueryProductDetailsParams.Product.newBuilder()
+                            .setProductId("one_try")
+                            .setProductType(BillingClient.ProductType.INAPP)
+                            .build(),
+
+                        QueryProductDetailsParams.Product.newBuilder()
+                            .setProductId("one_day_try")
+                            .setProductType(BillingClient.ProductType.INAPP)
+                            .build()
+                    )
+                )
+                .build()
+
+        billingClient.queryProductDetailsAsync(queryProductDetailsParams) { billingResult, productDetailsList ->
+            if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+                viewModel.onBillsGot(productDetailsList.toList())
+            }
+        }
+    }
+
+    private fun launchBillFlow(product: ProductDetails) {
+        val productDetailsParamsList = listOf(
+            BillingFlowParams.ProductDetailsParams.newBuilder()
+                .setProductDetails(product)
+                .build()
+        )
+
+        val billingFlowParams = BillingFlowParams.newBuilder()
+            .setProductDetailsParamsList(productDetailsParamsList)
+            .build()
+
+// Launch the billing flow
+        billingClient.launchBillingFlow(requireActivity(), billingFlowParams)
+
+    }
+
+//    override fun onPurchasesUpdated(
+//        billingResult: BillingResult,
+//        purchases: MutableList<Purchase>?
+//    ) {
+//        if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
+//            for (purchase in purchases) {
+////                handlePurchase(purchase)
+//            }
+//        } else if (billingResult.responseCode == BillingClient.BillingResponseCode.USER_CANCELED) {
+//            // Handle an error caused by a user cancelling the purchase flow.
+//        } else {
+//            // Handle any other error codes.
+//        }
+//    }
 
 }

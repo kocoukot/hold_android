@@ -9,11 +9,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.android.billingclient.api.ProductDetails
 import com.kocoukot.holdgame.R
 import com.kocoukot.holdgame.common.compose.theme.HTheme
 import com.kocoukot.holdgame.domain.model.EndgameButtons
@@ -29,11 +29,11 @@ fun EndGameContent(
     endGameState: EndgameState,
     endGameModel: EndgameModel,
     isAddLoaded: Boolean,
+    productList: List<ProductDetails>,
     onActionClicked: (ButtonActions) -> Unit
 ) {
     val record = endGameModel.recordValue?.result ?: 0
     val lastResult = endGameModel.currentValue?.result ?: 0
-    val context = LocalContext.current
 
     Box(
         modifier = Modifier
@@ -114,7 +114,11 @@ fun EndGameContent(
                     val positiveButtonText = when (endGameState) {
                         EndgameState.END_OR_CONTINUE -> stringResource(id = R.string.continue_game)
                         EndgameState.PAY_OR_WATCH -> stringResource(id = R.string.pay_to_continue)
-                        EndgameState.PAY_AMOUNT -> stringResource(id = R.string.pay_once)
+                        EndgameState.PAY_AMOUNT -> {
+                            productList.find { it.productId == "one_try" }?.oneTimePurchaseOfferDetails?.formattedPrice?.let { price ->
+                                stringResource(id = R.string.pay_once, price)
+                            } ?: ""
+                        }
                     }
 
                     val positiveButtonAction = when (endGameState) {
@@ -141,7 +145,7 @@ fun EndGameContent(
                     }
 
 
-                    AnimatedVisibility(
+                    if (positiveButtonText.isNotEmpty()) AnimatedVisibility(
                         visible = endGameState == EndgameState.END_OR_CONTINUE,
                         modifier = Modifier
                             .weight(1f),
@@ -175,7 +179,14 @@ fun EndGameContent(
                     val negativeButtonText = when (endGameState) {
                         EndgameState.END_OR_CONTINUE -> stringResource(id = R.string.cancel)
                         EndgameState.PAY_OR_WATCH -> stringResource(id = R.string.watch_to_continue)
-                        EndgameState.PAY_AMOUNT -> stringResource(id = R.string.pay_for_day)
+                        EndgameState.PAY_AMOUNT -> {
+                            productList.find { it.productId == "one_day_try" }?.oneTimePurchaseOfferDetails?.formattedPrice?.let { price ->
+                                stringResource(
+                                    id = R.string.pay_for_day,
+                                    price
+                                )
+                            } ?: ""
+                        }
                     }
 
                     val negativeButtonAction = when (endGameState) {
@@ -183,7 +194,7 @@ fun EndGameContent(
                         EndgameState.PAY_OR_WATCH -> ButtonActions.ClickOnWatchAdd
                         EndgameState.PAY_AMOUNT -> ButtonActions.ClickOnPayDay
                     }
-                    AnswerButton(
+                    if (negativeButtonText.isNotEmpty()) AnswerButton(
                         modifier = Modifier.fillMaxWidth(),
                         negativeButtonText,
                         negativeButtonType

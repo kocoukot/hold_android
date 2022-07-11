@@ -138,7 +138,8 @@ fun MainButtonScreenContent(viewModel: ButtonViewModel) {
                             isAddLoaded = state.value.isAddLoaded,
                             onActionClicked = {
                                 viewModel.setInputActions(it)
-                            }
+                            },
+                            productList = state.value.productDetails
                         )
                     }
                     GameState.USERNAME_INPUT -> NameInputContent(
@@ -155,14 +156,25 @@ fun MainButtonScreenContent(viewModel: ButtonViewModel) {
 @Composable
 fun Modifier.coloredShadow(
     color: Color = Color.White,
-    alpha: Float = 0.5f,
     borderRadius: Dp = 200.dp,
     shadowRadius: Dp = 200.dp,
     offsetY: Dp = 0.dp,
     offsetX: Dp = 0.dp
 ) = composed {
 
-    val shadowColor = color.copy(alpha = alpha).toArgb()
+//    LaunchedEffect(key1 = null){}
+//    val infiniteTransition = rememberInfiniteTransition()
+//    val labelMargin by infiniteTransition.animateValue(
+//        initialValue = 0.3f,
+//        targetValue = 0.4f,
+//        typeConverter = Float.VectorConverter,
+//        animationSpec = infiniteRepeatable(
+//            animation = tween(1000, easing = FastOutSlowInEasing),
+//            repeatMode = RepeatMode.Reverse
+//        )
+//    )
+
+    val shadowColor = color.copy(alpha = 0.5f).toArgb()
     val transparent = color.copy(alpha = 0f).toArgb()
 
     this.drawBehind {

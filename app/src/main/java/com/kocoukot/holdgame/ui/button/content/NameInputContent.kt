@@ -57,7 +57,8 @@ fun NameInputContent(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .weight(1f),
+                    .weight(1f)
+                    .padding(bottom = 30.dp),
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
@@ -86,7 +87,9 @@ fun NameInputContent(
                         )
                     },
                     singleLine = true,
-                    modifier = Modifier.padding(horizontal = 90.dp),
+                    modifier = Modifier
+                        .padding(horizontal = 90.dp)
+                        .padding(bottom = 40.dp),
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = Color.Transparent,
                         cursorColor = Color.White,

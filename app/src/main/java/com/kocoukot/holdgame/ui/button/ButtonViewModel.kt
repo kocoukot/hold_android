@@ -4,6 +4,7 @@ import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.android.billingclient.api.ProductDetails
 import com.kocoukot.holdgame.arch.common.livedata.SingleLiveEvent
 import com.kocoukot.holdgame.domain.model.EndgameModel
 import com.kocoukot.holdgame.domain.model.EndgameState
@@ -42,6 +43,7 @@ class ButtonViewModel(
     private var stopTime = 0L
 
     init {
+
         viewModelScope.launch {
             val gameUser = getUserNameUseCase.getName()
             _state.value = _state.value.copy(gameUser = gameUser)
@@ -62,10 +64,9 @@ class ButtonViewModel(
 
             ButtonActions.ClickOnContinue -> continueGame()
             ButtonActions.ClickOnPay -> payForGame()
-            ButtonActions.ClickOnPayDay -> {}
-            ButtonActions.ClickOnPayOnce -> {}
+            ButtonActions.ClickOnPayDay -> payMoney(state.value.productDetails.find { it.productId == "one_day_try" })
+            ButtonActions.ClickOnPayOnce -> payMoney(state.value.productDetails.find { it.productId == "one_try" })
             ButtonActions.ClickOnWatchAdd -> showAd()
-
         }
     }
 
@@ -216,7 +217,7 @@ class ButtonViewModel(
 
     private fun showAd() {
         viewModelScope.launch {
-            delay(3000)
+            delay(1000)
             onUserWatchedAd()
         }
 //        _steps.value = ButtonRoute.ShowAd
@@ -232,6 +233,16 @@ class ButtonViewModel(
             couldContinue = true,
             endgameState = EndgameState.END_OR_CONTINUE
         )
+    }
+
+    fun onBillsGot(productDetails: List<ProductDetails>) {
+        _state.value = _state.value.copy(productDetails = productDetails)
+    }
+
+    private fun payMoney(product: ProductDetails?) {
+        product?.let {
+            _steps.value = ButtonRoute.LaunchBill(it)
+        }
     }
 
 
