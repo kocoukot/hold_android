@@ -49,4 +49,15 @@ class AccountRepositoryImpl(
     }
 
     override suspend fun getUser() = accountStorage.getUserName()
+
+    override suspend fun saveLastResult(timer: Long) {
+        accountStorage.lastSavedTimer = timer
+    }
+
+    override suspend fun getLastResult(): Long? = accountStorage.lastSavedTimer
+
+
+    override suspend fun clearLastResult() {
+        accountStorage.lastSavedTimer = null
+    }
 }
