@@ -5,10 +5,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.android.billingclient.api.*
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
@@ -19,8 +21,13 @@ import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import com.kocoukot.holdgame.BuildConfig
 import com.kocoukot.holdgame.R
 import com.kocoukot.holdgame.ui.button.model.ButtonRoute
+import com.kocoukot.holdgame.ui.common.Constant.ONE_DAY_PRODUCT_ID
+import com.kocoukot.holdgame.ui.common.Constant.ONE_TRY_PRODUCT_ID
 import com.kocoukot.holdgame.ui.common.ext.navController
 import com.kocoukot.holdgame.ui.common.ext.observeNonNull
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
@@ -41,8 +48,22 @@ class ButtonFragment : Fragment() {
         PurchasesUpdatedListener { billingResult, purchases ->
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
                 getProductsList()
-            } else if (billingResult.responseCode == BillingClient.BillingResponseCode.USER_CANCELED) {
-                // Handle an error caused by a user cancelling the purchase flow.
+                Timber.i("purchases ${purchases.first().products}")
+                when {
+                    purchases.first().products.first().equals(ONE_DAY_PRODUCT_ID) -> {
+                        Toast.makeText(
+                            requireContext(),
+                            "Thank you for your purchase. This purchase is still in development. ;)",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        viewModel.onUserGotOneMoreTry()
+                        handlePurchase(purchases.first())
+                    }
+                    purchases.first().products.first().equals(ONE_TRY_PRODUCT_ID) -> {
+                        handlePurchase(purchases.first())
+                        viewModel.onUserGotOneMoreTry()
+                    }
+                }
             } else {
                 // Handle any other error codes.
             }
@@ -81,8 +102,14 @@ class ButtonFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adInit()
         billStartConnection()
+
+
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        adInit()
     }
 
     private fun adInit() {
@@ -113,7 +140,7 @@ class ButtonFragment : Fragment() {
                 mRewardedAd?.fullScreenContentCallback = adCallBack
 
                 Timber.d("ad was User earned the reward. rewardAmount ")
-                viewModel.onUserWatchedAd()
+                viewModel.onUserGotOneMoreTry()
             }
         } else {
             Timber.d("ad was rewarded ad wasn't ready yet.")
@@ -173,12 +200,12 @@ class ButtonFragment : Fragment() {
                 .setProductList(
                     listOf(
                         QueryProductDetailsParams.Product.newBuilder()
-                            .setProductId("one_try")
+                            .setProductId(ONE_TRY_PRODUCT_ID)
                             .setProductType(BillingClient.ProductType.INAPP)
                             .build(),
 
                         QueryProductDetailsParams.Product.newBuilder()
-                            .setProductId("one_day_try")
+                            .setProductId(ONE_DAY_PRODUCT_ID)
                             .setProductType(BillingClient.ProductType.INAPP)
                             .build()
                     )
@@ -187,6 +214,7 @@ class ButtonFragment : Fragment() {
 
         billingClient.queryProductDetailsAsync(queryProductDetailsParams) { billingResult, productDetailsList ->
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+                Timber.i("productDetailsList $productDetailsList")
                 viewModel.onBillsGot(productDetailsList.toList())
             }
         }
@@ -202,25 +230,19 @@ class ButtonFragment : Fragment() {
         val billingFlowParams = BillingFlowParams.newBuilder()
             .setProductDetailsParamsList(productDetailsParamsList)
             .build()
-
-// Launch the billing flow
         billingClient.launchBillingFlow(requireActivity(), billingFlowParams)
-
     }
 
-//    override fun onPurchasesUpdated(
-//        billingResult: BillingResult,
-//        purchases: MutableList<Purchase>?
-//    ) {
-//        if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
-//            for (purchase in purchases) {
-////                handlePurchase(purchase)
-//            }
-//        } else if (billingResult.responseCode == BillingClient.BillingResponseCode.USER_CANCELED) {
-//            // Handle an error caused by a user cancelling the purchase flow.
-//        } else {
-//            // Handle any other error codes.
-//        }
-//    }
+    private fun handlePurchase(purchase: Purchase) {
+        val consumeParams =
+            ConsumeParams.newBuilder()
+                .setPurchaseToken(purchase.purchaseToken)
+                .build()
+        val consumeResult = lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                billingClient.consumePurchase(consumeParams)
 
+            }
+        }
+    }
 }

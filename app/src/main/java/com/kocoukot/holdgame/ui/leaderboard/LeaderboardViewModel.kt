@@ -2,7 +2,6 @@ package com.kocoukot.holdgame.ui.leaderboard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kocoukot.holdgame.arch.common.livedata.SingleLiveEvent
 import com.kocoukot.holdgame.domain.model.RecordType
 import com.kocoukot.holdgame.domain.usecase.leaderboard.GetGlobalResultsUseCase
 import com.kocoukot.holdgame.domain.usecase.leaderboard.GetUserResultsUseCase
@@ -10,6 +9,7 @@ import com.kocoukot.holdgame.ui.leaderboard.model.LeaderboardActions
 import com.kocoukot.holdgame.ui.leaderboard.model.LeaderboardModel
 import com.kocoukot.holdgame.ui.leaderboard.model.LeaderboardRoute
 import com.kocoukot.holdgame.ui.leaderboard.model.LeaderboardState
+import com.kocoukot.holdgame.utils.SingleLiveEvent
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -18,6 +18,23 @@ class AccountStorage(
             accountManager.setAuthToken(getOrCreateAccount(), SESSION_TOKEN, value)
         }
 
+
+    var lastSavedTimer: Long?
+        get() {
+            return getAccount()
+                ?.let { account ->
+                    try {
+                        accountManager.getUserData(account, SAVED_TIMER)?.toLong()
+                    } catch (e: Exception) {
+                        null
+                    }
+                }
+        }
+        set(value) {
+            accountManager.setUserData(getOrCreateAccount(), SAVED_TIMER, value.toString())
+        }
+
+
     fun setNewResult(result: GameResult) = setNewResult(getOrCreateAccount(), result)
 
 
@@ -98,11 +115,9 @@ class AccountStorage(
         private const val ACCOUNT_PASSWORD = "Password"
 
         private const val SESSION_TOKEN = "$ACCOUNT_TYPE.session.token"
-        private const val PASS_CODE = "$ACCOUNT_TYPE.pass.code"
+        private const val SAVED_TIMER = "$ACCOUNT_TYPE.user.timer"
 
         private const val USER = "$ACCOUNT_TYPE.user"
-        private const val PROFILE = "$ACCOUNT_TYPE.user.profile"
-        private const val IS_USER_LOGGED_IN = "$ACCOUNT_TYPE.user.isLoggedIn"
     }
 
 }

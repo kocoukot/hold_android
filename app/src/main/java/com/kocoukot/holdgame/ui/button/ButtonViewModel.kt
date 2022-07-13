@@ -5,20 +5,17 @@ import android.os.Looper
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.billingclient.api.ProductDetails
-import com.kocoukot.holdgame.arch.common.livedata.SingleLiveEvent
 import com.kocoukot.holdgame.domain.model.EndgameModel
 import com.kocoukot.holdgame.domain.model.EndgameState
 import com.kocoukot.holdgame.domain.model.user.GameResult
 import com.kocoukot.holdgame.domain.model.user.GameUser
 import com.kocoukot.holdgame.domain.usecase.leaderboard.GetUserLocalRecordUseCase
-import com.kocoukot.holdgame.domain.usecase.user.GetUserNameUseCase
-import com.kocoukot.holdgame.domain.usecase.user.SaveNewResultUseCase
-import com.kocoukot.holdgame.domain.usecase.user.SaveUserNameUseCase
+import com.kocoukot.holdgame.domain.usecase.user.*
 import com.kocoukot.holdgame.ui.button.model.ButtonActions
 import com.kocoukot.holdgame.ui.button.model.ButtonRoute
 import com.kocoukot.holdgame.ui.button.model.GameState
 import com.kocoukot.holdgame.ui.button.model.MainGameState
-import kotlinx.coroutines.delay
+import com.kocoukot.holdgame.utils.SingleLiveEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -28,6 +25,9 @@ class ButtonViewModel(
     private val getUserLocalRecordUseCase: GetUserLocalRecordUseCase,
     private val saveUserNameUseCase: SaveUserNameUseCase,
     private val getUserNameUseCase: GetUserNameUseCase,
+    private val saveLastResultUseCase: SaveLastResultUseCase,
+    private val clearLastResultUseCase: ClearLastResultUseCase,
+    private val getLastResultUseCase: GetLastResultUseCase,
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<MainGameState> =
@@ -45,8 +45,13 @@ class ButtonViewModel(
     init {
 
         viewModelScope.launch {
-            val gameUser = getUserNameUseCase.getName()
-            _state.value = _state.value.copy(gameUser = gameUser)
+            val timer = getLastResultUseCase.invoke()
+            _state.value = _state.value.copy(
+                gameUser = getUserNameUseCase.getName(),
+                gameRecord = getUserLocalRecordUseCase.invoke()?.result,
+                timer = timer,
+                couldContinue = timer != null && timer > 0
+            )
         }
     }
 
@@ -93,6 +98,7 @@ class ButtonViewModel(
             _state.value.endGameData?.currentValue?.let { current ->
                 kotlin.runCatching { saveNewResultUseCase.invoke(current) }
                     .onSuccess {
+                        clearLastResultUseCase.invoke()
                         _state.value =
                             _state.value.copy(
                                 endgameState = EndgameState.END_OR_CONTINUE,
@@ -216,18 +222,32 @@ class ButtonViewModel(
     }
 
     private fun showAd() {
-        viewModelScope.launch {
-            delay(1000)
-            onUserWatchedAd()
-        }
-//        _steps.value = ButtonRoute.ShowAd
+//        viewModelScope.launch {
+//            delay(1000)
+//            onUserGotOneMoreTry()
+//        }
+        _steps.value = ButtonRoute.ShowAd
     }
 
     fun onAddLoaded(isLoaded: Boolean) {
         _state.value = _state.value.copy(isAddLoaded = isLoaded)
     }
 
-    fun onUserWatchedAd() {
+    fun onUserGotOneMoreTry() {
+        _state.value.timer?.let { timer ->
+            viewModelScope.launch {
+                saveLastResultUseCase.invoke(timer)
+            }
+        }
+
+        _state.value = _state.value.copy(
+            gameState = GameState.BUTTON,
+            couldContinue = true,
+            endgameState = EndgameState.END_OR_CONTINUE
+        )
+    }
+
+    fun onUserGotTryForDay() {
         _state.value = _state.value.copy(
             gameState = GameState.BUTTON,
             couldContinue = true,
@@ -244,6 +264,4 @@ class ButtonViewModel(
             _steps.value = ButtonRoute.LaunchBill(it)
         }
     }
-
-
 }

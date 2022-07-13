@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/buttonFragment">
 
@@ -9,8 +8,7 @@
     <fragment
         android:id="@+id/buttonFragment"
         android:name="com.kocoukot.holdgame.ui.button.ButtonFragment"
-        android:label="ButtonFragment"
-        tools:layout="@layout/fragment_button">
+        android:label="ButtonFragment">
 
         <action
             android:id="@+id/action_buttonFragment_to_leaderboardFragment"
@@ -27,8 +25,7 @@
     <fragment
         android:id="@+id/leaderboardFragment"
         android:name="com.kocoukot.holdgame.ui.leaderboard.LeaderboardFragment"
-        android:label="LeaderboardFragment"
-        tools:layout="@layout/fragment_leaderboard" />
+        android:label="LeaderboardFragment" />
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.kocoukot.holdgame.ui.profile.ProfileFragment"
