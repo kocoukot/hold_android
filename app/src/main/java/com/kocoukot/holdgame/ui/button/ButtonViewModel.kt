@@ -5,7 +5,6 @@ import android.os.Looper
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.billingclient.api.ProductDetails
-import com.kocoukot.holdgame.arch.common.livedata.SingleLiveEvent
 import com.kocoukot.holdgame.domain.model.EndgameModel
 import com.kocoukot.holdgame.domain.model.EndgameState
 import com.kocoukot.holdgame.domain.model.user.GameResult
@@ -16,6 +15,7 @@ import com.kocoukot.holdgame.ui.button.model.ButtonActions
 import com.kocoukot.holdgame.ui.button.model.ButtonRoute
 import com.kocoukot.holdgame.ui.button.model.GameState
 import com.kocoukot.holdgame.ui.button.model.MainGameState
+import com.kocoukot.holdgame.utils.SingleLiveEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch

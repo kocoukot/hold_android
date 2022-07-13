@@ -1,6 +1,5 @@
 package com.kocoukot.holdgame.di
 
-import com.google.android.libraries.places.api.Places
 import com.kocoukot.holdgame.ui.button.ButtonViewModel
 import com.kocoukot.holdgame.ui.leaderboard.LeaderboardViewModel
 import com.kocoukot.holdgame.ui.profile.ProfileViewModel
@@ -12,7 +11,6 @@ val baseModule = module {
 
     single<KoinInjector> { GlobalKoinInjector(getKoin()) }
 
-    single { Places.createClient(get()) }
 }
 
 val buttonModule = module {

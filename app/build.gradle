@@ -26,8 +26,8 @@ def computeVersionCode() {
 
 android {
     compileSdkVersion rootProject.compile_sdk
+    compileSdk rootProject.compile_sdk
 
-    compileSdk 31
 
     defaultConfig {
         applicationId "com.kocoukot.holdgame"
@@ -98,7 +98,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.2.0-beta03"
+        kotlinCompilerExtensionVersion = "1.2.0"
     }
 }
 
@@ -110,19 +110,13 @@ dependencies {
     androidX()
     retrofit()
     google()
-    rxJava()
-//    paging()
     koin()
     nav()
-//    adapterDelegates()
     firebase()
-
     okhttp()
     glide()
-//    compression()
     jetpackCompose()
 
     // Timber
     implementation 'com.jakewharton.timber:timber:5.0.1'
-    api project(":app:arch")
 }

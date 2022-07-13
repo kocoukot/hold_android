@@ -2,12 +2,12 @@ package com.kocoukot.holdgame.ui.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kocoukot.holdgame.arch.common.livedata.SingleLiveEvent
 import com.kocoukot.holdgame.domain.usecase.user.GetUserNameUseCase
 import com.kocoukot.holdgame.domain.usecase.user.SaveUserNameUseCase
 import com.kocoukot.holdgame.ui.profile.model.ProfileActions
 import com.kocoukot.holdgame.ui.profile.model.ProfileRoute
 import com.kocoukot.holdgame.ui.profile.model.ProfileState
+import com.kocoukot.holdgame.utils.SingleLiveEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
