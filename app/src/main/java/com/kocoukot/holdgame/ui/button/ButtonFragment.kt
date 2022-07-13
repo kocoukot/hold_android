@@ -20,10 +20,10 @@ import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import com.kocoukot.holdgame.BuildConfig
 import com.kocoukot.holdgame.R
+import com.kocoukot.holdgame.common.ext.navController
 import com.kocoukot.holdgame.ui.button.model.ButtonRoute
 import com.kocoukot.holdgame.ui.common.Constant.ONE_DAY_PRODUCT_ID
 import com.kocoukot.holdgame.ui.common.Constant.ONE_TRY_PRODUCT_ID
-import com.kocoukot.holdgame.ui.common.ext.navController
 import com.kocoukot.holdgame.ui.common.ext.observeNonNull
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -238,10 +238,9 @@ class ButtonFragment : Fragment() {
             ConsumeParams.newBuilder()
                 .setPurchaseToken(purchase.purchaseToken)
                 .build()
-        val consumeResult = lifecycleScope.launch {
+        lifecycleScope.launch {
             withContext(Dispatchers.IO) {
                 billingClient.consumePurchase(consumeParams)
-
             }
         }
     }

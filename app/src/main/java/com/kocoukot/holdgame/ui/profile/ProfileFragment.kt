@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
-import com.kocoukot.holdgame.ui.common.ext.navController
+import com.kocoukot.holdgame.common.ext.navController
 import com.kocoukot.holdgame.ui.common.ext.observeNonNull
 import com.kocoukot.holdgame.ui.profile.model.ProfileRoute
 import org.koin.androidx.viewmodel.ext.android.viewModel
