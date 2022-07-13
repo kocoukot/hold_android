@@ -1,0 +1,20 @@
+{
+  "version": 3,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "com.kocoukot.holdgame",
+  "variantName": "production",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "attributes": [],
+      "versionCode": 1105,
+      "versionName": "0.1.1",
+      "outputFile": "app-production.apk"
+    }
+  ],
+  "elementType": "File"
+}
