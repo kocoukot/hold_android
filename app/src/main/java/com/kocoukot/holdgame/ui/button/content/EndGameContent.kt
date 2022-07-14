@@ -40,7 +40,6 @@ fun EndGameContent(
             .fillMaxSize()
     ) {
 
-
         Image(
             painter = painterResource(id = R.drawable.img_blur),
             contentDescription = null,
@@ -106,27 +105,16 @@ fun EndGameContent(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    val positiveButtonType = when (endGameState) {
-                        EndgameState.END_OR_CONTINUE -> EndgameButtons.CONTINUE
-                        EndgameState.PAY_AMOUNT -> EndgameButtons.PAY
-                        EndgameState.PAY_OR_WATCH -> EndgameButtons.PAY_ONCE
-                    }
                     val positiveButtonText = when (endGameState) {
-                        EndgameState.END_OR_CONTINUE -> stringResource(id = R.string.continue_game)
-                        EndgameState.PAY_OR_WATCH -> stringResource(id = R.string.pay_to_continue)
                         EndgameState.PAY_AMOUNT -> {
                             productList.find { it.productId == "one_try" }?.oneTimePurchaseOfferDetails?.formattedPrice?.let { price ->
                                 stringResource(id = R.string.pay_once, price)
                             } ?: ""
                         }
+                        else -> {
+                            stringResource(endGameState.posButtonTitle)
+                        }
                     }
-
-                    val positiveButtonAction = when (endGameState) {
-                        EndgameState.END_OR_CONTINUE -> ButtonActions.ClickOnContinue
-                        EndgameState.PAY_OR_WATCH -> ButtonActions.ClickOnPay
-                        EndgameState.PAY_AMOUNT -> ButtonActions.ClickOnPayOnce
-                    }
-
 
                     if (isAddLoaded) {
                         AnswerButton(
@@ -138,9 +126,9 @@ fun EndGameContent(
                                     )
                                 ),
                             positiveButtonText,
-                            positiveButtonType
+                            endGameState.posButtonType
                         ) {
-                            onActionClicked(positiveButtonAction)
+                            onActionClicked(endGameState.posButtonAction)
                         }
                     }
 
@@ -170,15 +158,8 @@ fun EndGameContent(
                     enter = slideInVertically(animationSpec = tween(300)),
                     exit = slideOutVertically(animationSpec = tween(300))
                 ) {
-                    val negativeButtonType = when (endGameState) {
-                        EndgameState.END_OR_CONTINUE -> EndgameButtons.CONTINUE
-                        EndgameState.PAY_OR_WATCH -> EndgameButtons.WATCH
-                        EndgameState.PAY_AMOUNT -> EndgameButtons.PAY_FOR_DAY
-                    }
 
                     val negativeButtonText = when (endGameState) {
-                        EndgameState.END_OR_CONTINUE -> stringResource(id = R.string.cancel)
-                        EndgameState.PAY_OR_WATCH -> stringResource(id = R.string.watch_to_continue)
                         EndgameState.PAY_AMOUNT -> {
                             productList.find { it.productId == "one_day_try" }?.oneTimePurchaseOfferDetails?.formattedPrice?.let { price ->
                                 stringResource(
@@ -187,22 +168,19 @@ fun EndGameContent(
                                 )
                             } ?: ""
                         }
+                        else -> {
+                            stringResource(id = endGameState.negButtonTitle)
+                        }
                     }
 
-                    val negativeButtonAction = when (endGameState) {
-                        EndgameState.END_OR_CONTINUE -> ButtonActions.ClickOnContinue
-                        EndgameState.PAY_OR_WATCH -> ButtonActions.ClickOnWatchAdd
-                        EndgameState.PAY_AMOUNT -> ButtonActions.ClickOnPayDay
-                    }
                     if (negativeButtonText.isNotEmpty()) AnswerButton(
                         modifier = Modifier.fillMaxWidth(),
                         negativeButtonText,
-                        negativeButtonType
+                        endGameState.negButtonType
                     ) {
-                        onActionClicked(negativeButtonAction)
+                        onActionClicked(endGameState.negButtonAction)
                     }
                 }
-
             }
         }
     }

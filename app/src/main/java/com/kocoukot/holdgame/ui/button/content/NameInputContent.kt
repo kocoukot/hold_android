@@ -2,6 +2,7 @@ package com.kocoukot.holdgame.ui.button.content
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
@@ -70,6 +71,11 @@ fun NameInputContent(
 
                 TextField(
                     keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
+                    keyboardActions = KeyboardActions(
+                        onAny = {
+                            saveName.invoke(inputText.trim())
+                        }
+                    ),
                     value = inputText,
                     onValueChange = {
                         if (it.length < 20) {
