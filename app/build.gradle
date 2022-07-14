@@ -48,20 +48,20 @@ android {
         signingConfigs {
             debug_config {
                 try {
-                    keyAlias KEY_ALIAS
-                    keyPassword KEY_PASSWORD
+                    keyAlias props.getProperty("KEY_ALIAS")
+                    keyPassword props.getProperty("KEY_PASSWORD")
                     storeFile file(getKeystorePath())
-                    storePassword KEYSTORE_PASSWORD
+                    storePassword props.getProperty("KEYSTORE_PASSWORD")
                 } catch (ignored) {
                     throw new InvalidUserDataException("You should define KEYSTORE_PASSWORD and KEY_PASSWORD in gradle.properties.")
                 }
             }
             default_config {
                 try {
-                    keyAlias KEY_ALIAS
-                    keyPassword KEY_PASSWORD
+                    keyAlias props.getProperty("KEY_ALIAS") 
+                    keyPassword props.getProperty("KEY_PASSWORD")
                     storeFile file(getKeystorePath())
-                    storePassword KEYSTORE_PASSWORD
+                    storePassword props.getProperty("KEYSTORE_PASSWORD")
                 } catch (ignored) {
                     throw new InvalidUserDataException("You should define KEYSTORE_PASSWORD and KEY_PASSWORD in gradle.properties.")
                 }
