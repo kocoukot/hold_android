@@ -34,6 +34,20 @@ class AccountStorage(
             accountManager.setUserData(getOrCreateAccount(), SAVED_TIMER, value.toString())
         }
 
+    var purchaseDayDate: Long?
+        get() {
+            return getAccount()
+                ?.let { account ->
+                    try {
+                        accountManager.getUserData(account, PURCHASE_FOR_DAY)?.toLong()
+                    } catch (e: Exception) {
+                        null
+                    }
+                }
+        }
+        set(value) {
+            accountManager.setUserData(getOrCreateAccount(), PURCHASE_FOR_DAY, value.toString())
+        }
 
     fun setNewResult(result: GameResult) = setNewResult(getOrCreateAccount(), result)
 
@@ -116,6 +130,7 @@ class AccountStorage(
 
         private const val SESSION_TOKEN = "$ACCOUNT_TYPE.session.token"
         private const val SAVED_TIMER = "$ACCOUNT_TYPE.user.timer"
+        private const val PURCHASE_FOR_DAY = "$ACCOUNT_TYPE.user.dayPurchase"
 
         private const val USER = "$ACCOUNT_TYPE.user"
     }

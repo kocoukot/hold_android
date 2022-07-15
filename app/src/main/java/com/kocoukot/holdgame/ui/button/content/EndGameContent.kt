@@ -1,11 +1,10 @@
 package com.kocoukot.holdgame.ui.button.content
 
-import androidx.compose.animation.*
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -15,15 +14,23 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.android.billingclient.api.ProductDetails
 import com.kocoukot.holdgame.R
+import com.kocoukot.holdgame.common.compose.movementSpec
 import com.kocoukot.holdgame.common.compose.theme.HTheme
+import com.kocoukot.holdgame.common.compose.transformationSpec
 import com.kocoukot.holdgame.domain.model.EndgameButtons
 import com.kocoukot.holdgame.domain.model.EndgameModel
 import com.kocoukot.holdgame.domain.model.EndgameState
 import com.kocoukot.holdgame.ui.button.model.ButtonActions
+import com.kocoukot.holdgame.ui.common.Constant.ONE_DAY_PRODUCT_ID
+import com.kocoukot.holdgame.ui.common.Constant.ONE_TRY_PRODUCT_ID
 import com.kocoukot.holdgame.ui.common.compose.AnswerButton
 import com.kocoukot.holdgame.utils.DateUtil
+import com.skydoves.orbitary.Orbitary
+import com.skydoves.orbitary.animateSharedElementTransition
+import com.skydoves.orbitary.rememberContentWithOrbitaryScope
 
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun EndGameContent(
     endGameState: EndgameState,
@@ -35,6 +42,8 @@ fun EndGameContent(
     val record = endGameModel.recordValue?.result ?: 0
     val lastResult = endGameModel.currentValue?.result ?: 0
 
+    var isTransformed by remember { mutableStateOf(endGameState != EndgameState.END_OR_CONTINUE) }
+    isTransformed = endGameState != EndgameState.END_OR_CONTINUE
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -50,10 +59,9 @@ fun EndGameContent(
 
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp),
+                .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Top
         ) {
 
             Image(
@@ -72,15 +80,15 @@ fun EndGameContent(
                 titleText,
                 style = HTheme.typography.subtitleHeader,
                 textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
 
-                )
+
             Spacer(modifier = Modifier.height(10.dp))
 
 
             if (record > lastResult) {
                 val notEnoughForRecord = record - lastResult
-
-
                 Text(
                     stringResource(
                         id = R.string.not_enough_for_record,
@@ -93,95 +101,88 @@ fun EndGameContent(
 
             }
 
-
-            Column(
-                modifier = Modifier.padding(horizontal = 8.dp),
-
-                ) {
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+            val items = rememberContentWithOrbitaryScope {
+                endGameState.buttonsList.forEach { item ->
                     val positiveButtonText = when (endGameState) {
                         EndgameState.PAY_AMOUNT -> {
-                            productList.find { it.productId == "one_try" }?.oneTimePurchaseOfferDetails?.formattedPrice?.let { price ->
-                                stringResource(id = R.string.pay_once, price)
+                            productList.find { it.productId == if (item.buttonType == EndgameButtons.PAY_ONCE) ONE_TRY_PRODUCT_ID else ONE_DAY_PRODUCT_ID }?.oneTimePurchaseOfferDetails?.formattedPrice?.let { price ->
+                                stringResource(id = item.buttonTitle, price)
                             } ?: ""
                         }
                         else -> {
-                            stringResource(endGameState.posButtonTitle)
+                            stringResource(item.buttonTitle)
                         }
                     }
 
-                    if (isAddLoaded) {
+                    if (item.buttonType == EndgameButtons.WATCH && isAddLoaded) {
                         AnswerButton(
-                            modifier = Modifier
-                                .weight(1f)
-                                .animateContentSize(
-                                    animationSpec = tween(
-                                        durationMillis = 300,
-                                    )
+                            modifier = if (isTransformed) {
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = 8.dp)
+                                    .padding(horizontal = 8.dp)
+                            } else {
+                                Modifier
+                                    .weight(1f)
+                                    .padding(horizontal = 4.dp)
+                            }
+                                .animateSharedElementTransition(
+                                    this,
+                                    movementSpec,
+                                    transformationSpec
                                 ),
                             positiveButtonText,
-                            endGameState.posButtonType
+                            item.buttonType
                         ) {
-                            onActionClicked(endGameState.posButtonAction)
+                            onActionClicked(item.buttonAction)
                         }
-                    }
+                    } else {
 
 
-                    if (positiveButtonText.isNotEmpty()) AnimatedVisibility(
-                        visible = endGameState == EndgameState.END_OR_CONTINUE,
-                        modifier = Modifier
-                            .weight(1f),
-                        exit = slideOutHorizontally(
-                            animationSpec = tween(300),
-                            targetOffsetX = { 500 })
-                    ) {
                         AnswerButton(
-                            modifier = Modifier.weight(1f),
-                            stringResource(id = R.string.cancel), EndgameButtons.CANCEL
+                            modifier = if (isTransformed) {
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = 8.dp)
+                                    .padding(horizontal = 8.dp)
+                            } else {
+                                Modifier
+                                    .weight(1f)
+                                    .padding(horizontal = 4.dp)
+                            }
+                                .animateSharedElementTransition(
+                                    this,
+                                    movementSpec,
+                                    transformationSpec
+                                ),
+                            positiveButtonText,
+                            item.buttonType
                         ) {
-                            onActionClicked(ButtonActions.ClickOnCancel)
+                            onActionClicked(item.buttonAction)
                         }
-
-
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(20.dp))
-                AnimatedVisibility(
-                    visible = (endGameState == EndgameState.PAY_OR_WATCH || endGameState == EndgameState.PAY_AMOUNT),
-                    enter = slideInVertically(animationSpec = tween(300)),
-                    exit = slideOutVertically(animationSpec = tween(300))
-                ) {
-
-                    val negativeButtonText = when (endGameState) {
-                        EndgameState.PAY_AMOUNT -> {
-                            productList.find { it.productId == "one_day_try" }?.oneTimePurchaseOfferDetails?.formattedPrice?.let { price ->
-                                stringResource(
-                                    id = R.string.pay_for_day,
-                                    price
-                                )
-                            } ?: ""
-                        }
-                        else -> {
-                            stringResource(id = endGameState.negButtonTitle)
-                        }
-                    }
-
-                    if (negativeButtonText.isNotEmpty()) AnswerButton(
-                        modifier = Modifier.fillMaxWidth(),
-                        negativeButtonText,
-                        endGameState.negButtonType
-                    ) {
-                        onActionClicked(endGameState.negButtonAction)
                     }
                 }
             }
+            Orbitary(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 36.dp),
+                isTransformed = isTransformed,
+                onStartContent = {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        items()
+                    }
+                },
+                onTransformedContent = {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) { items() }
+                }
+            )
         }
     }
 }

@@ -6,7 +6,7 @@ import com.kocoukot.holdgame.data.network.service.LeaderboardService
 import com.kocoukot.holdgame.domain.model.user.GameGlobalUser
 import com.kocoukot.holdgame.domain.model.user.GameResult
 import com.kocoukot.holdgame.domain.model.user.GameUser
-import com.kocoukot.holdgame.utils.UNNAMED_USER
+import com.kocoukot.holdgame.ui.common.Constant.UNNAMED_USER
 
 class LeaderboardRepositoryImpl(
     private val accountStorage: AccountStorage,

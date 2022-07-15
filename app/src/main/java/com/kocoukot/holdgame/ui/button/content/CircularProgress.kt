@@ -34,7 +34,7 @@ fun CircularGameProgress(
 
 
     ) {
-        val startAngle = 5f
+        val startAngle = 6f
         val sweep = progress * 360f
         val diameterOffset = stroke.width / 2
         foregroundColor?.let {

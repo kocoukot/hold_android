@@ -23,10 +23,14 @@ val useCaseModule = module {
 
     factory { SetSessionTokenUseCase(get()) }
 
-    factory { ClearLastResultUseCase(get()) }
     factory { GetLastResultUseCase(get()) }
+
     factory { SaveLastResultUseCase(get()) }
 
+
+    factory { SaveDayPurchaseDateUseCase(get()) }
+
+    factory { GetDayPurchaseUseCase(get()) }
 
 }
 

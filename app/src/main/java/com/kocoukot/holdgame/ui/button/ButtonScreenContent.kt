@@ -1,10 +1,14 @@
 package com.kocoukot.holdgame.ui.button
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -24,7 +28,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.kocoukot.holdgame.R
-import com.kocoukot.holdgame.common.compose.BackHandler
 import com.kocoukot.holdgame.common.compose.theme.HTheme
 import com.kocoukot.holdgame.ui.button.content.EndGameContent
 import com.kocoukot.holdgame.ui.button.content.MainGameContent
@@ -51,104 +54,104 @@ fun MainButtonScreenContent(viewModel: ButtonViewModel) {
     if (state.value.isLoading) {
         DialogLoadingContent()
     }
-    Box {
-        Scaffold(
-            backgroundColor = HTheme.colors.primaryBackground,
-            topBar = {
-                TopAppBar(
-                    elevation = 0.dp,
-                    backgroundColor = Color.Transparent,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    title = {},
-                    navigationIcon = {
-                        if (isEndGame == GameState.END_GAME || (isEndGame == GameState.BUTTON && !state.value.gameUser?.userName.isNullOrEmpty())) {
-                            AnimatedContent(targetState = isEndGame) { target ->
-                                IconButton(
-                                    modifier = Modifier
-                                        .background(
-                                            if (target == GameState.END_GAME) Color.Transparent else HTheme.colors.primaryWhite30,
-                                            RoundedCornerShape(50)
-                                        ),
-                                    onClick = {
-                                        if (target == GameState.END_GAME)
-                                            viewModel.setInputActions(ButtonActions.ClickOnBack)
-                                        else
-                                            viewModel.setInputActions(ButtonActions.ClickOnToProfile)
-                                    },
-                                ) {
-                                    Icon(
-                                        painter = painterResource(
-                                            id = if (target == GameState.END_GAME)
-                                                R.drawable.ic_close
-                                            else
-                                                R.drawable.ic_user
-                                        ),
-                                        contentDescription = null,
-                                        tint = HTheme.colors.primaryWhite
-                                    )
-                                }
-                            }
-                        }
-                    },
-                    actions = {
-                        AnimatedVisibility(visible = isEndGame == GameState.BUTTON) {
+
+    Scaffold(
+        backgroundColor = HTheme.colors.primaryBackground,
+        topBar = {
+            TopAppBar(
+                elevation = 0.dp,
+                backgroundColor = Color.Transparent,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                title = {},
+                navigationIcon = {
+                    if (isEndGame == GameState.END_GAME || (isEndGame == GameState.BUTTON && !state.value.gameUser?.userName.isNullOrEmpty())) {
+                        AnimatedContent(targetState = isEndGame) { target ->
                             IconButton(
-                                onClick = {
-                                    viewModel.setInputActions(ButtonActions.ClickOnToLeaderboard)
-                                },
                                 modifier = Modifier
-                                    .size(46.dp)
                                     .background(
-                                        HTheme.colors.primaryWhite30,
-                                        RoundedCornerShape(12.dp)
-                                    )
+                                        if (target == GameState.END_GAME) Color.Transparent else HTheme.colors.primaryWhite30,
+                                        RoundedCornerShape(50)
+                                    ),
+                                onClick = {
+                                    if (target == GameState.END_GAME)
+                                        viewModel.setInputActions(ButtonActions.ClickOnBack)
+                                    else
+                                        viewModel.setInputActions(ButtonActions.ClickOnToProfile)
+                                },
                             ) {
                                 Icon(
-                                    painter = painterResource(id = R.drawable.ic_leaderboard),
+                                    painter = painterResource(
+                                        id = if (target == GameState.END_GAME)
+                                            R.drawable.ic_close
+                                        else
+                                            R.drawable.ic_user
+                                    ),
                                     contentDescription = null,
                                     tint = HTheme.colors.primaryWhite
                                 )
                             }
                         }
-                    })
-
-            }
-        ) {
-
-
-            AnimatedContent(
-                modifier = Modifier.fillMaxSize(),
-                targetState = isEndGame,
-                contentAlignment = Alignment.Center,
-            ) { targetState ->
-                when (targetState) {
-                    GameState.BUTTON -> MainGameContent(
-                        modifier = Modifier.fillMaxSize(),
-                        timer = state.value.timer,
-                        record = state.value.gameRecord ?: 0,
-                        buttonAction = {
-                            viewModel.setInputActions(it)
-                        })
-                    GameState.END_GAME -> state.value.endGameData?.let { endGameData ->
-                        EndGameContent(
-                            endGameState = state.value.endgameState,
-                            endGameModel = endGameData,
-                            isAddLoaded = state.value.isAddLoaded,
-                            onActionClicked = {
-                                viewModel.setInputActions(it)
-                            },
-                            productList = state.value.productDetails
-                        )
                     }
-                    GameState.USERNAME_INPUT -> NameInputContent(
-                        saveName = { viewModel.setInputActions(ButtonActions.NickNameSave(it)) }
+                },
+                actions = {
+                    AnimatedVisibility(visible = isEndGame == GameState.BUTTON) {
+                        IconButton(
+                            onClick = {
+                                viewModel.setInputActions(ButtonActions.ClickOnToLeaderboard)
+                            },
+                            modifier = Modifier
+                                .size(46.dp)
+                                .background(
+                                    HTheme.colors.primaryWhite30,
+                                    RoundedCornerShape(12.dp)
+                                )
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_leaderboard),
+                                contentDescription = null,
+                                tint = HTheme.colors.primaryWhite
+                            )
+                        }
+                    }
+                })
+
+        }
+    ) {
+
+
+        AnimatedContent(
+            modifier = Modifier.fillMaxSize(),
+            targetState = isEndGame,
+            contentAlignment = Alignment.Center,
+        ) { targetState ->
+            when (targetState) {
+                GameState.BUTTON -> MainGameContent(
+                    modifier = Modifier.fillMaxSize(),
+                    timer = state.value.timer,
+                    record = state.value.gameRecord ?: 0,
+                    buttonAction = {
+                        viewModel.setInputActions(it)
+                    })
+                GameState.END_GAME -> state.value.endGameData?.let { endGameData ->
+                    EndGameContent(
+                        endGameState = state.value.endgameState,
+                        endGameModel = endGameData,
+                        isAddLoaded = state.value.isAddLoaded,
+                        onActionClicked = {
+                            viewModel.setInputActions(it)
+                        },
+                        productList = state.value.productDetails
                     )
                 }
+                GameState.USERNAME_INPUT -> NameInputContent(
+                    saveName = { viewModel.setInputActions(ButtonActions.NickNameSave(it)) }
+                )
             }
         }
     }
+
 }
 
 

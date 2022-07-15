@@ -9,7 +9,7 @@ data class MainGameState(
     val errorText: String = "",
     val isLoading: Boolean = false,
     val gameState: GameState = GameState.BUTTON,
-    val couldContinue: Boolean = false,
+    val couldContinue: CouldContinueType = CouldContinueType.NONE,
     val endgameState: EndgameState = EndgameState.END_OR_CONTINUE,
     val timer: Long? = null,
     val gameRecord: Long? = null,

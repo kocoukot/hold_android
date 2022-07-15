@@ -1,44 +1,54 @@
 package com.kocoukot.holdgame.domain.model
 
-import androidx.annotation.StringRes
 import com.kocoukot.holdgame.R
 import com.kocoukot.holdgame.ui.button.model.ButtonActions
+import com.kocoukot.holdgame.ui.button.model.ButtonType
 
 enum class EndgameState(
-    val posButtonType: EndgameButtons,
-    @StringRes val posButtonTitle: Int,
-    val posButtonAction: ButtonActions,
-    val negButtonType: EndgameButtons,
-    @StringRes val negButtonTitle: Int,
-    val negButtonAction: ButtonActions,
-
-    ) {
+    val buttonsList: List<ButtonType>
+) {
     END_OR_CONTINUE(
-        posButtonType = EndgameButtons.CONTINUE,
-        posButtonTitle = R.string.continue_game,
-        posButtonAction = ButtonActions.ClickOnContinue,
-
-        negButtonType = EndgameButtons.CONTINUE,
-        negButtonTitle = R.string.cancel,
-        negButtonAction = ButtonActions.ClickOnContinue,
+        listOf(
+            ButtonType(
+                buttonType = EndgameButtons.CONTINUE,
+                buttonTitle = R.string.continue_game,
+                buttonAction = ButtonActions.ClickOnContinue,
+            ),
+            ButtonType(
+                buttonType = EndgameButtons.CANCEL,
+                buttonTitle = R.string.cancel,
+                buttonAction = ButtonActions.ClickOnCancel,
+            ),
+        )
     ),
     PAY_OR_WATCH(
-        posButtonType = EndgameButtons.PAY,
-        posButtonTitle = R.string.pay_to_continue,
-        posButtonAction = ButtonActions.ClickOnPay,
-
-        negButtonType = EndgameButtons.WATCH,
-        negButtonTitle = R.string.watch_to_continue,
-        negButtonAction = ButtonActions.ClickOnWatchAdd,
+        listOf(
+            ButtonType(
+                buttonType = EndgameButtons.PAY,
+                buttonTitle = R.string.pay_to_continue,
+                buttonAction = ButtonActions.ClickOnPay,
+            ),
+            ButtonType(
+                buttonType = EndgameButtons.WATCH,
+                buttonTitle = R.string.watch_to_continue,
+                buttonAction = ButtonActions.ClickOnWatchAdd,
+            ),
+        )
     ),
     PAY_AMOUNT(
-        posButtonType = EndgameButtons.PAY_ONCE,
-        posButtonTitle = R.string.pay_once,
-        posButtonAction = ButtonActions.ClickOnPayOnce,
+        listOf(
+            ButtonType(
+                buttonType = EndgameButtons.PAY_ONCE,
+                buttonTitle = R.string.pay_once,
+                buttonAction = ButtonActions.ClickOnPayOnce,
+            ),
 
-        negButtonType = EndgameButtons.PAY_FOR_DAY,
-        negButtonTitle = R.string.pay_for_day,
-        negButtonAction = ButtonActions.ClickOnPayDay,
+            ButtonType(
+                buttonType = EndgameButtons.PAY_FOR_DAY,
+                buttonTitle = R.string.pay_for_day,
+                buttonAction = ButtonActions.ClickOnPayDay,
+            ),
+        )
     ),
 }
 

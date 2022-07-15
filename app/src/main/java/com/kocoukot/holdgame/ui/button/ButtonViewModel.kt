@@ -11,10 +11,7 @@ import com.kocoukot.holdgame.domain.model.user.GameResult
 import com.kocoukot.holdgame.domain.model.user.GameUser
 import com.kocoukot.holdgame.domain.usecase.leaderboard.GetUserLocalRecordUseCase
 import com.kocoukot.holdgame.domain.usecase.user.*
-import com.kocoukot.holdgame.ui.button.model.ButtonActions
-import com.kocoukot.holdgame.ui.button.model.ButtonRoute
-import com.kocoukot.holdgame.ui.button.model.GameState
-import com.kocoukot.holdgame.ui.button.model.MainGameState
+import com.kocoukot.holdgame.ui.button.model.*
 import com.kocoukot.holdgame.utils.SingleLiveEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -26,8 +23,9 @@ class ButtonViewModel(
     private val saveUserNameUseCase: SaveUserNameUseCase,
     private val getUserNameUseCase: GetUserNameUseCase,
     private val saveLastResultUseCase: SaveLastResultUseCase,
-    private val clearLastResultUseCase: ClearLastResultUseCase,
     private val getLastResultUseCase: GetLastResultUseCase,
+    private val saveDayPurchaseDateUseCase: SaveDayPurchaseDateUseCase,
+    private val getDayPurchaseUseCase: GetDayPurchaseUseCase,
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<MainGameState> =
@@ -46,11 +44,18 @@ class ButtonViewModel(
 
         viewModelScope.launch {
             val timer = getLastResultUseCase.invoke()
+            val purchaseDate = getDayPurchaseUseCase.invoke()
             _state.value = _state.value.copy(
                 gameUser = getUserNameUseCase.getName(),
                 gameRecord = getUserLocalRecordUseCase.invoke()?.result,
                 timer = timer,
-                couldContinue = timer != null && timer > 0
+                couldContinue =
+//                if (purchaseDate != null && purchaseDate > 0)
+//                    CouldContinueType.FOR_DAY
+//                else if (timer != null && timer > 0)
+//                    CouldContinueType.SINGLE
+//                else
+                CouldContinueType.NONE
             )
         }
     }
@@ -62,7 +67,8 @@ class ButtonViewModel(
 
             ButtonActions.PressDownButton -> onButtonStartHold()
             ButtonActions.PressUpButton -> onButtonStopHold()
-            ButtonActions.ClickOnBack, ButtonActions.ClickOnCancel -> closeEndGame()
+            ButtonActions.ClickOnBack -> clickGoBack()
+            ButtonActions.ClickOnCancel -> closeEndGame()
             ButtonActions.PressedBackButton -> backPressed()
 
             is ButtonActions.NickNameSave -> nicknameSave(action.nickname)
@@ -92,20 +98,32 @@ class ButtonViewModel(
         }
     }
 
+    private fun clickGoBack() {
+        if (_state.value.couldContinue == CouldContinueType.FOR_DAY) {
+            _state.value = _state.value.copy(
+                gameState = GameState.BUTTON,
+                endgameState = EndgameState.END_OR_CONTINUE
+            )
+        } else {
+            closeEndGame()
+        }
+    }
+
     private fun closeEndGame() {
         _state.value = _state.value.copy(isLoading = true)
         viewModelScope.launch {
             _state.value.endGameData?.currentValue?.let { current ->
                 kotlin.runCatching { saveNewResultUseCase.invoke(current) }
                     .onSuccess {
-                        clearLastResultUseCase.invoke()
+                        saveLastResultUseCase.invoke(null)
                         _state.value =
                             _state.value.copy(
                                 endgameState = EndgameState.END_OR_CONTINUE,
                                 timer = null
                             )
                         if (_state.value.gameUser == null || _state.value.gameUser?.userName?.isEmpty() == true) {
-                            _state.value = _state.value.copy(gameState = GameState.USERNAME_INPUT)
+                            _state.value =
+                                _state.value.copy(gameState = GameState.USERNAME_INPUT)
                         } else {
                             _state.value = _state.value.copy(gameState = GameState.BUTTON)
                         }
@@ -171,9 +189,8 @@ class ButtonViewModel(
                 endGameData = EndgameModel(
                     recordValue = gameRecord,
                     currentValue = newValue,
-
-                    ),
-                couldContinue = false,
+                ),
+                couldContinue = if (_state.value.couldContinue == CouldContinueType.FOR_DAY) CouldContinueType.FOR_DAY else CouldContinueType.NONE,
                 gameState = GameState.END_GAME
             )
         }
@@ -182,7 +199,7 @@ class ButtonViewModel(
 
     private fun startTimer() {
         viewModelScope.launch {
-            if (!_state.value.couldContinue) {
+            if (_state.value.couldContinue == CouldContinueType.NONE) {
                 _state.value = _state.value.copy(timer = null)
                 startTime = System.currentTimeMillis()
             } else {
@@ -214,7 +231,17 @@ class ButtonViewModel(
     }
 
     private fun continueGame() {
-        _state.value = _state.value.copy(endgameState = EndgameState.PAY_OR_WATCH)
+        viewModelScope.launch {
+            //todo check date by server
+            if (_state.value.couldContinue == CouldContinueType.FOR_DAY) {
+                _state.value = _state.value.copy(
+                    endgameState = EndgameState.END_OR_CONTINUE,
+                    gameState = GameState.BUTTON
+                )
+            } else {
+                _state.value = _state.value.copy(endgameState = EndgameState.PAY_OR_WATCH)
+            }
+        }
     }
 
     private fun payForGame() {
@@ -222,10 +249,6 @@ class ButtonViewModel(
     }
 
     private fun showAd() {
-//        viewModelScope.launch {
-//            delay(1000)
-//            onUserGotOneMoreTry()
-//        }
         _steps.value = ButtonRoute.ShowAd
     }
 
@@ -242,15 +265,19 @@ class ButtonViewModel(
 
         _state.value = _state.value.copy(
             gameState = GameState.BUTTON,
-            couldContinue = true,
+            couldContinue = CouldContinueType.SINGLE,
             endgameState = EndgameState.END_OR_CONTINUE
         )
     }
 
     fun onUserGotTryForDay() {
+        val currentDate = System.currentTimeMillis()
+        viewModelScope.launch {
+            saveDayPurchaseDateUseCase.invoke(currentDate)
+        }
         _state.value = _state.value.copy(
             gameState = GameState.BUTTON,
-            couldContinue = true,
+            couldContinue = CouldContinueType.FOR_DAY,
             endgameState = EndgameState.END_OR_CONTINUE
         )
     }

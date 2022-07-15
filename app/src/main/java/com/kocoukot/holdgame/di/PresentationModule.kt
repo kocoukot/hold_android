@@ -15,7 +15,7 @@ val baseModule = module {
 
 val buttonModule = module {
 
-    viewModel { ButtonViewModel(get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { ButtonViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
 
     viewModel { ProfileViewModel(get(), get()) }
 

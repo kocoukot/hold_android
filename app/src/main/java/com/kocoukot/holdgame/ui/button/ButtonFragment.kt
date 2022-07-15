@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.content.ContextCompat
@@ -51,12 +50,7 @@ class ButtonFragment : Fragment() {
                 Timber.i("purchases ${purchases.first().products}")
                 when {
                     purchases.first().products.first().equals(ONE_DAY_PRODUCT_ID) -> {
-                        Toast.makeText(
-                            requireContext(),
-                            "Thank you for your purchase. This purchase is still in development. ;)",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        viewModel.onUserGotOneMoreTry()
+                        viewModel.onUserGotTryForDay()
                         handlePurchase(purchases.first())
                     }
                     purchases.first().products.first().equals(ONE_TRY_PRODUCT_ID) -> {

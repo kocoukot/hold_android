@@ -14,10 +14,13 @@ interface AccountRepository {
 
     suspend fun getUser(): GameUser?
 
-    suspend fun saveLastResult(timer: Long)
+    suspend fun saveLastResult(timer: Long?)
 
     suspend fun getLastResult(): Long?
 
-    suspend fun clearLastResult()
+
+    suspend fun getDayPurchaseDate(): Long?
+
+    suspend fun saveDayPurchaseDate(date: Long)
 
 }

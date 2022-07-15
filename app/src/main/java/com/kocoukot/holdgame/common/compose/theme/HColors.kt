@@ -15,5 +15,4 @@ data class HColors internal constructor(
     val primaryBackground: Color = Color(0xFF04103A),
     val secondaryGray: Color = Color(0xFF737373),
     val primaryBlue: Color = Color(0xFF1F7AFE),
-
-    )
+)

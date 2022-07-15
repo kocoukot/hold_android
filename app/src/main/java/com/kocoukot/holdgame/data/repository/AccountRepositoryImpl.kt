@@ -50,14 +50,16 @@ class AccountRepositoryImpl(
 
     override suspend fun getUser() = accountStorage.getUserName()
 
-    override suspend fun saveLastResult(timer: Long) {
+    override suspend fun saveLastResult(timer: Long?) {
         accountStorage.lastSavedTimer = timer
     }
 
     override suspend fun getLastResult(): Long? = accountStorage.lastSavedTimer
 
 
-    override suspend fun clearLastResult() {
-        accountStorage.lastSavedTimer = null
+    override suspend fun getDayPurchaseDate() = accountStorage.purchaseDayDate
+
+    override suspend fun saveDayPurchaseDate(date: Long) {
+        accountStorage.purchaseDayDate = date
     }
 }

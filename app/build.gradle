@@ -58,7 +58,7 @@ android {
             }
             default_config {
                 try {
-                    keyAlias props.getProperty("KEY_ALIAS") 
+                    keyAlias props.getProperty("KEY_ALIAS")
                     keyPassword props.getProperty("KEY_PASSWORD")
                     storeFile file(getKeystorePath())
                     storePassword props.getProperty("KEYSTORE_PASSWORD")
@@ -123,4 +123,6 @@ dependencies {
 
     // Timber
     implementation 'com.jakewharton.timber:timber:5.0.1'
+    implementation "com.github.skydoves:orbitary:0.1.0"
+
 }
