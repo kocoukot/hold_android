@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kocoukot.holdgame.domain.model.RecordType
 import com.kocoukot.holdgame.domain.usecase.leaderboard.GetGlobalResultsUseCase
+import com.kocoukot.holdgame.domain.usecase.leaderboard.GetUserLocalRecordUseCase
 import com.kocoukot.holdgame.domain.usecase.leaderboard.GetUserResultsUseCase
 import com.kocoukot.holdgame.ui.leaderboard.model.LeaderboardActions
 import com.kocoukot.holdgame.ui.leaderboard.model.LeaderboardModel
@@ -20,6 +21,7 @@ import kotlinx.coroutines.supervisorScope
 class LeaderboardViewModel(
     getUserLocalResultsUseCase: GetUserResultsUseCase,
     getGlobalResultsUseCase: GetGlobalResultsUseCase,
+    getUserLocalRecordUseCase: GetUserLocalRecordUseCase,
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<LeaderboardState> =
@@ -44,9 +46,11 @@ class LeaderboardViewModel(
                 try {
                     val localUser = async { getUserLocalResultsUseCase() }
                     val globalUsers = async { getGlobalResultsUseCase() }
+                    val localUserRecord = async { getUserLocalRecordUseCase() }
 
                     _state.value = _state.value.copy(
                         data = LeaderboardModel(
+                            localUSerRecord = localUserRecord.await(),
                             personalRecords = localUser.await(),
                             worldRecordRecords = globalUsers.await()
                         )

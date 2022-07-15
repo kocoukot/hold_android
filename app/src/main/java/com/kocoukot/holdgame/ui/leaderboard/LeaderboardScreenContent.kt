@@ -115,6 +115,7 @@ fun LeaderboardScreeContent(viewModel: LeaderboardViewModel) {
                                 ) {
                                     itemsIndexed(records) { index, gameUser ->
                                         GlobalRecordRow(
+                                            myRecord = state.value.data?.localUSerRecord,
                                             index + 1,
                                             gameUser,
                                             state.value.data?.personalRecords?.id ?: ""

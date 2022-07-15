@@ -19,7 +19,7 @@ val buttonModule = module {
 
     viewModel { ProfileViewModel(get(), get()) }
 
-    viewModel { LeaderboardViewModel(get(), get()) }
+    viewModel { LeaderboardViewModel(get(), get(), get()) }
 
 }
 

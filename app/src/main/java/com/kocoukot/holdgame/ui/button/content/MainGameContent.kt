@@ -7,10 +7,12 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.interaction.Interaction
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.progressSemantics
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
@@ -34,7 +36,6 @@ import com.kocoukot.holdgame.common.compose.theme.HTheme
 import com.kocoukot.holdgame.ui.button.coloredShadow
 import com.kocoukot.holdgame.ui.button.model.ButtonActions
 import com.kocoukot.holdgame.utils.DateUtil
-import kotlinx.coroutines.flow.collect
 import timber.log.Timber
 
 @Composable
@@ -176,10 +177,13 @@ fun MainGameContent(
             if (timer != null && timer > 0) {
                 Timber.d("record $record")
 
-                CircularProgressWithThumb(
+                CircularGameProgress(
                     progress = animatedProgress,
                     strokeWidth = 15.dp,
-                    //  modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .progressSemantics(progress)
+                        .size(200.dp)
+                        .focusable()
                 )
             }
         }
