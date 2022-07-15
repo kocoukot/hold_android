@@ -5,5 +5,5 @@ import com.kocoukot.holdgame.data.repository.AccountRepository
 class SaveDayPurchaseDateUseCase(
     private val accountRepository: AccountRepository,
 ) {
-    suspend operator fun invoke(date: Long) = accountRepository.saveDayPurchaseDate(date)
+    suspend operator fun invoke(date: Long?) = accountRepository.saveDayPurchaseDate(date)
 }

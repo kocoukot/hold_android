@@ -59,7 +59,7 @@ class AccountRepositoryImpl(
 
     override suspend fun getDayPurchaseDate() = accountStorage.purchaseDayDate
 
-    override suspend fun saveDayPurchaseDate(date: Long) {
+    override suspend fun saveDayPurchaseDate(date: Long?) {
         accountStorage.purchaseDayDate = date
     }
 }

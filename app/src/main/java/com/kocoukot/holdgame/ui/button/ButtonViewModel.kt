@@ -50,12 +50,12 @@ class ButtonViewModel(
                 gameRecord = getUserLocalRecordUseCase.invoke()?.result,
                 timer = timer,
                 couldContinue =
-//                if (purchaseDate != null && purchaseDate > 0)
-//                    CouldContinueType.FOR_DAY
-//                else if (timer != null && timer > 0)
-//                    CouldContinueType.SINGLE
-//                else
-                CouldContinueType.NONE
+                if (purchaseDate != null && purchaseDate > 0)
+                    CouldContinueType.FOR_DAY
+                else if (timer != null && timer > 0)
+                    CouldContinueType.SINGLE
+                else
+                    CouldContinueType.NONE
             )
         }
     }
@@ -86,7 +86,7 @@ class ButtonViewModel(
             GameState.BUTTON -> ButtonRoute.CloseApp
             GameState.END_GAME -> {
                 when (_state.value.endgameState) {
-                    EndgameState.END_OR_CONTINUE -> closeEndGame()
+                    EndgameState.END_OR_CONTINUE -> clickGoBack()
                     EndgameState.PAY_OR_WATCH -> _state.value =
                         _state.value.copy(endgameState = EndgameState.END_OR_CONTINUE)
                     EndgameState.PAY_AMOUNT -> _state.value =
@@ -100,10 +100,16 @@ class ButtonViewModel(
 
     private fun clickGoBack() {
         if (_state.value.couldContinue == CouldContinueType.FOR_DAY) {
-            _state.value = _state.value.copy(
-                gameState = GameState.BUTTON,
-                endgameState = EndgameState.END_OR_CONTINUE
-            )
+            checkPurchaseValidation {
+                if (it) {
+                    _state.value = _state.value.copy(
+                        gameState = GameState.BUTTON,
+                        endgameState = EndgameState.END_OR_CONTINUE
+                    )
+                } else {
+                    closeEndGame()
+                }
+            }
         } else {
             closeEndGame()
         }
@@ -185,6 +191,11 @@ class ButtonViewModel(
     private fun setEndGameData(newValue: GameResult) {
         viewModelScope.launch {
             val gameRecord = getUserLocalRecordUseCase.invoke()
+            if (_state.value.couldContinue == CouldContinueType.FOR_DAY) {
+                _state.value.timer?.let { timer ->
+                    saveLastResultUseCase.invoke(timer)
+                }
+            }
             _state.value = _state.value.copy(
                 endGameData = EndgameModel(
                     recordValue = gameRecord,
@@ -231,15 +242,18 @@ class ButtonViewModel(
     }
 
     private fun continueGame() {
-        viewModelScope.launch {
-            //todo check date by server
-            if (_state.value.couldContinue == CouldContinueType.FOR_DAY) {
+        checkPurchaseValidation {
+            if (it) {
                 _state.value = _state.value.copy(
                     endgameState = EndgameState.END_OR_CONTINUE,
-                    gameState = GameState.BUTTON
+                    gameState = GameState.BUTTON,
+                    couldContinue = CouldContinueType.FOR_DAY,
                 )
             } else {
-                _state.value = _state.value.copy(endgameState = EndgameState.PAY_OR_WATCH)
+                _state.value = _state.value.copy(
+                    endgameState = EndgameState.PAY_OR_WATCH,
+                    couldContinue = CouldContinueType.NONE,
+                )
             }
         }
     }
@@ -272,6 +286,11 @@ class ButtonViewModel(
 
     fun onUserGotTryForDay() {
         val currentDate = System.currentTimeMillis()
+        _state.value.timer?.let { timer ->
+            viewModelScope.launch {
+                saveLastResultUseCase.invoke(timer)
+            }
+        }
         viewModelScope.launch {
             saveDayPurchaseDateUseCase.invoke(currentDate)
         }
@@ -289,6 +308,19 @@ class ButtonViewModel(
     private fun payMoney(product: ProductDetails?) {
         product?.let {
             _steps.value = ButtonRoute.LaunchBill(it)
+        }
+    }
+
+    private fun checkPurchaseValidation(couldContinue: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            val purchaseDate = getDayPurchaseUseCase.invoke() ?: 0
+            val currentDate = System.currentTimeMillis()
+            if (((currentDate - purchaseDate) / 1000) <= 86400) {
+                couldContinue.invoke(true)
+            } else {
+                saveDayPurchaseDateUseCase.invoke(null)
+                couldContinue.invoke(false)
+            }
         }
     }
 }
