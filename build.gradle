@@ -13,7 +13,7 @@ buildscript {
         version_major = 0
         version_minor = 1
         version_patch = 2
-        build_number = 0
+        build_number = 1
     }
 
     repositories {

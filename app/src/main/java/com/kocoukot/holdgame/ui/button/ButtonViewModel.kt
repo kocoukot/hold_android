@@ -16,6 +16,7 @@ import com.kocoukot.holdgame.utils.SingleLiveEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class ButtonViewModel(
     private val saveNewResultUseCase: SaveNewResultUseCase,
@@ -333,6 +334,7 @@ class ButtonViewModel(
 
     private suspend fun checkAvailable(time: Long, couldContinue: (Boolean) -> Unit) {
         val purchaseDate = getDayPurchaseUseCase.invoke() ?: 0
+        Timber.i("checkAvailable time $time purchaseDate $purchaseDate dif ${time - purchaseDate}")
         if (((time - purchaseDate) / 1000) in 0..86400) {
             couldContinue.invoke(true)
         } else {
