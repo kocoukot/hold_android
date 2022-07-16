@@ -32,6 +32,8 @@ val useCaseModule = module {
 
     factory { GetDayPurchaseUseCase(get()) }
 
+    factory { GetGlobalTimeUseCase(get()) }
+
 }
 
 

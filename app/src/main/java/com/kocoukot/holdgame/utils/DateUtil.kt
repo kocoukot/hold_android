@@ -1,12 +1,17 @@
 package com.kocoukot.holdgame.utils
 
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 object DateUtil {
     private val dateFormatter = SimpleDateFormat("d MMMM yyyy", Locale.getDefault())
     private val recordTimeFormat = SimpleDateFormat("mm:ss.SS", Locale.US)
     private val timerFormat = SimpleDateFormat("mm:ss:SS", Locale.US)
+    var inputFormatter =
+        DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSS", Locale.getDefault())
 
 
     fun getRecordDate(recordDate: Long): String = dateFormatter.format(Date(recordDate))
@@ -34,4 +39,6 @@ object DateUtil {
 
     fun timeTimerFormat(time: Long): CharSequence = timerFormat.format(time)
 
+    fun convertGlobalTime(time: String) =
+        LocalDateTime.parse(time, inputFormatter).toEpochSecond(ZoneOffset.UTC) * 1000
 }

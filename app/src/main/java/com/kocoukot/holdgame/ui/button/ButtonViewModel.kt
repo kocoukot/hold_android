@@ -26,7 +26,9 @@ class ButtonViewModel(
     private val getLastResultUseCase: GetLastResultUseCase,
     private val saveDayPurchaseDateUseCase: SaveDayPurchaseDateUseCase,
     private val getDayPurchaseUseCase: GetDayPurchaseUseCase,
-) : ViewModel() {
+    private val getGlobalTimeUseCase: GetGlobalTimeUseCase,
+
+    ) : ViewModel() {
 
     private val _state: MutableStateFlow<MainGameState> =
         MutableStateFlow(MainGameState())
@@ -41,7 +43,6 @@ class ButtonViewModel(
     private var stopTime = 0L
 
     init {
-
         viewModelScope.launch {
             val timer = getLastResultUseCase.invoke()
             val purchaseDate = getDayPurchaseUseCase.invoke()
@@ -313,14 +314,30 @@ class ButtonViewModel(
 
     private fun checkPurchaseValidation(couldContinue: (Boolean) -> Unit) {
         viewModelScope.launch {
-            val purchaseDate = getDayPurchaseUseCase.invoke() ?: 0
-            val currentDate = System.currentTimeMillis()
-            if (((currentDate - purchaseDate) / 1000) <= 86400) {
-                couldContinue.invoke(true)
+            if (_state.value.couldContinue == CouldContinueType.FOR_DAY) {
+                kotlin.runCatching {
+                    getGlobalTimeUseCase.getGlobalTime()
+                }
+                    .onSuccess { globalTime ->
+                        checkAvailable(globalTime ?: 0) { couldContinue.invoke(it) }
+                    }
+                    .onFailure {
+                        checkAvailable(System.currentTimeMillis()) { couldContinue.invoke(it) }
+                    }
             } else {
                 saveDayPurchaseDateUseCase.invoke(null)
                 couldContinue.invoke(false)
             }
+        }
+    }
+
+    private suspend fun checkAvailable(time: Long, couldContinue: (Boolean) -> Unit) {
+        val purchaseDate = getDayPurchaseUseCase.invoke() ?: 0
+        if (((time - purchaseDate) / 1000) in 0..86400) {
+            couldContinue.invoke(true)
+        } else {
+            saveDayPurchaseDateUseCase.invoke(null)
+            couldContinue.invoke(false)
         }
     }
 }

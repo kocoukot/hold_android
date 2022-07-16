@@ -6,6 +6,9 @@ import com.kocoukot.holdgame.data.network.model.request.ResultRequest
 import com.kocoukot.holdgame.data.network.model.request.UpdateUserRequest
 import com.kocoukot.holdgame.data.network.service.UserService
 import com.kocoukot.holdgame.domain.model.user.GameResult
+import com.kocoukot.holdgame.utils.DateUtil.convertGlobalTime
+import timber.log.Timber
+import java.time.ZoneId
 
 class AccountRepositoryImpl(
     private val accountStorage: AccountStorage,
@@ -61,5 +64,12 @@ class AccountRepositoryImpl(
 
     override suspend fun saveDayPurchaseDate(date: Long?) {
         accountStorage.purchaseDayDate = date
+    }
+
+    override suspend fun getGlobalTime(): Long? {
+        val response = userService.getGlobalTime(ZoneId.systemDefault().toString())
+        val converted = convertGlobalTime(response.globalTime)
+        Timber.i("ZoneId ${response.globalTime} isoDateFormatter $converted")
+        return converted
     }
 }

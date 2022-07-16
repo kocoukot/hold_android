@@ -23,4 +23,6 @@ interface AccountRepository {
 
     suspend fun saveDayPurchaseDate(date: Long?)
 
+    suspend fun getGlobalTime(): Long?
+
 }
