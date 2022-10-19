@@ -72,13 +72,13 @@ android {
     }
 
     buildTypes {
-        sandbox {
+        debug {
             minifyEnabled false
             debuggable true
             signingConfig signingConfigs.default_config
         }
 
-        production {
+        release {
             minifyEnabled true
             debuggable false
             signingConfig signingConfigs.default_config
@@ -124,5 +124,10 @@ dependencies {
     // Timber
     implementation 'com.jakewharton.timber:timber:5.0.1'
     implementation "com.github.skydoves:orbitary:0.1.0"
+
+    implementation project(path: ':leaderboard-feature')
+    implementation project(path: ':profile-feature')
+    implementation project(path: ':core')
+
 
 }

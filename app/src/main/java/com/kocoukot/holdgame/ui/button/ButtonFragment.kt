@@ -18,12 +18,12 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import com.kocoukot.holdgame.BuildConfig
+import com.kocoukot.holdgame.Constant.ONE_DAY_PRODUCT_ID
+import com.kocoukot.holdgame.Constant.ONE_TRY_PRODUCT_ID
 import com.kocoukot.holdgame.R
-import com.kocoukot.holdgame.common.ext.navController
+import com.kocoukot.holdgame.navController
+import com.kocoukot.holdgame.observeNonNull
 import com.kocoukot.holdgame.ui.button.model.ButtonRoute
-import com.kocoukot.holdgame.ui.common.Constant.ONE_DAY_PRODUCT_ID
-import com.kocoukot.holdgame.ui.common.Constant.ONE_TRY_PRODUCT_ID
-import com.kocoukot.holdgame.ui.common.ext.observeNonNull
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

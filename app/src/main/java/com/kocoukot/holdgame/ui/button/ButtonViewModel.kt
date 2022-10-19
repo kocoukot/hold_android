@@ -5,16 +5,14 @@ import android.os.Looper
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.billingclient.api.ProductDetails
-import com.kocoukot.holdgame.domain.model.EndgameModel
-import com.kocoukot.holdgame.domain.model.EndgameState
-import com.kocoukot.holdgame.domain.model.user.GameResult
-import com.kocoukot.holdgame.domain.model.user.GameUser
-import com.kocoukot.holdgame.domain.usecase.leaderboard.GetUserLocalRecordUseCase
 import com.kocoukot.holdgame.domain.usecase.user.*
+import com.kocoukot.holdgame.leaderboard_feature.domain.usecase.GetUserLocalRecordUseCase
+import com.kocoukot.holdgame.model.user.GameResult
+import com.kocoukot.holdgame.model.user.GameUser
 import com.kocoukot.holdgame.ui.button.model.*
-import com.kocoukot.holdgame.utils.SingleLiveEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -35,8 +33,9 @@ class ButtonViewModel(
         MutableStateFlow(MainGameState())
     val state = _state.asStateFlow()
 
-    private val _steps: SingleLiveEvent<ButtonRoute> = SingleLiveEvent()
-    val steps: SingleLiveEvent<ButtonRoute> = _steps
+    private val _steps: com.kocoukot.holdgame.core.SingleLiveEvent<ButtonRoute> =
+        com.kocoukot.holdgame.core.SingleLiveEvent()
+    val steps: com.kocoukot.holdgame.core.SingleLiveEvent<ButtonRoute> = _steps
 
 
     private var handler = Handler(Looper.getMainLooper())
@@ -296,11 +295,16 @@ class ButtonViewModel(
         viewModelScope.launch {
             saveDayPurchaseDateUseCase.invoke(currentDate)
         }
-        _state.value = _state.value.copy(
+        _state.update { it.copy(
             gameState = GameState.BUTTON,
             couldContinue = CouldContinueType.FOR_DAY,
             endgameState = EndgameState.END_OR_CONTINUE
-        )
+        ) }
+//        _state.value = _state.value.copy(
+//            gameState = GameState.BUTTON,
+//            couldContinue = CouldContinueType.FOR_DAY,
+//            endgameState = EndgameState.END_OR_CONTINUE
+//        )
     }
 
     fun onBillsGot(productDetails: List<ProductDetails>) {

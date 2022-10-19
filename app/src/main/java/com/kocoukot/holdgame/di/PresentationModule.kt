@@ -1,8 +1,8 @@
 package com.kocoukot.holdgame.di
 
+import com.kocoukot.holdgame.leaderboard_feature.LeaderboardViewModel
+import com.kocoukot.holdgame.profile_feature.ProfileViewModel
 import com.kocoukot.holdgame.ui.button.ButtonViewModel
-import com.kocoukot.holdgame.ui.leaderboard.LeaderboardViewModel
-import com.kocoukot.holdgame.ui.profile.ProfileViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 

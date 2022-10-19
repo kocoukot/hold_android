@@ -31,11 +31,12 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import com.kocoukot.holdgame.DateUtil
 import com.kocoukot.holdgame.R
-import com.kocoukot.holdgame.common.compose.theme.HTheme
+import com.kocoukot.holdgame.compose.elements.CircularGameProgress
+import com.kocoukot.holdgame.compose.theme.HTheme
 import com.kocoukot.holdgame.ui.button.coloredShadow
 import com.kocoukot.holdgame.ui.button.model.ButtonActions
-import com.kocoukot.holdgame.utils.DateUtil
 import timber.log.Timber
 
 @Composable

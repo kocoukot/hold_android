@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="achievements">Achievements</string>
+    <string name="my_records">My records</string>
+    <string name="world_records">World ranking</string>
+    <string name="empty_result_list">Results list is currently empty</string>
+
+</resources>
