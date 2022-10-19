@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "564678831028",
+    "firebase_url": "https://hold-1d706-default-rtdb.firebaseio.com",
+    "project_id": "hold-1d706",
+    "storage_bucket": "hold-1d706.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:564678831028:android:e7f66ed3d6d6f412d360e1",
+        "android_client_info": {
+          "package_name": "com.kocoukot.holdgame"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "564678831028-uk8oi6i9tph526l1o53hv65f7s0m6gku.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kocoukot.holdgame",
+            "certificate_hash": "2d5b179c55f8b3b38416235cc99b0dd214d85163"
+          }
+        },
+        {
+          "client_id": "564678831028-vt0rufmtfqqj29ajd180dspas23lcb3g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_ZmZK94UUrUaYlKQA12ScuewRouCETug"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "564678831028-vt0rufmtfqqj29ajd180dspas23lcb3g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

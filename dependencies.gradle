@@ -13,18 +13,21 @@ ext {
     paging_version = "3.0.0"
     accompanist_version = "0.16.0"
     lifecycle_version = "2.4.0-alpha03"
-    compose_version = "1.1.1"
+    compose_version = "1.2.0-rc03"//1.1.1"
+    billing_version = "5.0.0"
 
 
     jetpackCompose = dependencyGroup {
-        // Foundation (Border, Background, Box, Image, Scroll, shapes, animations, etc.)
         implementation("androidx.compose.foundation:foundation:$compose_version")
+
+        // Foundation (Border, Background, Box, Image, Scroll, shapes, animations, etc.)
         // Material design icons
         implementation("androidx.compose.material:material-icons-core:$compose_version")
         implementation("androidx.compose.material:material-icons-extended:$compose_version")
         // Integration with observables
         implementation("androidx.compose.runtime:runtime-livedata:$compose_version")
         implementation("androidx.compose.runtime:runtime-rxjava2:$compose_version")
+        implementation "androidx.constraintlayout:constraintlayout-compose:1.0.0-beta02"
 
         implementation 'androidx.activity:activity-compose:1.4.0'
         // Compose Material Design
@@ -38,17 +41,15 @@ ext {
         // Integration with ViewModels
         implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.4.1'
         // UI Tests
-        androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
 
-        implementation "com.google.android.material:compose-theme-adapter:$compose_version"
+//        implementation "com.google.android.material:compose-theme-adapter:$compose_version"
         // When using a AppCompat theme
         implementation "com.google.accompanist:accompanist-appcompat-theme:0.16.0"
 
         implementation "io.coil-kt:coil-compose:1.4.0"
         implementation "io.coil-kt:coil-gif:1.4.0"
-
+        implementation "com.google.accompanist:accompanist-flowlayout:0.10.0"
     }
-
 
     kotlin = dependencyGroup {
         implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
@@ -57,22 +58,16 @@ ext {
     google = dependencyGroup {
         implementation 'com.google.android.material:material:1.3.0'
         implementation 'com.google.android.gms:play-services-auth:19.0.0'
-        implementation 'com.google.maps.android:android-maps-utils:2.2.2'
-        implementation 'com.google.android.libraries.places:places:2.4.0'
         implementation 'com.google.code.gson:gson:2.8.6'
+        implementation 'com.google.android.gms:play-services-ads:21.0.0'
+        implementation("com.android.billingclient:billing-ktx:$billing_version")
     }
 
-    facebook = dependencyGroup {
-        implementation 'com.facebook.android:facebook-login:8.1.0'
-
-    }
 
     firebase = dependencyGroup {
-        implementation platform('com.google.firebase:firebase-bom:28.4.2')
-        implementation 'com.google.firebase:firebase-auth'
-//        implementation 'com.google.firebase:firebase-crashlytics-ktx'
+        implementation platform('com.google.firebase:firebase-bom:30.1.0')
+        implementation 'com.google.firebase:firebase-crashlytics-ktx'
         implementation 'com.google.firebase:firebase-analytics-ktx'
-        implementation 'com.google.firebase:firebase-messaging-ktx'
     }
 
     retrofit = dependencyGroup {
@@ -90,11 +85,6 @@ ext {
     rxJava = dependencyGroup {
         implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
         implementation "io.reactivex.rxjava2:rxkotlin:2.4.0"
-    }
-
-    paging = dependencyGroup{
-        implementation "androidx.paging:paging-runtime:$paging_version"
-        implementation "androidx.paging:paging-rxjava2:$paging_version"
     }
 
     androidX = dependencyGroup {
@@ -122,23 +112,9 @@ ext {
         implementation "androidx.navigation:navigation-dynamic-features-fragment:$nav_version"
     }
 
-    adapterDelegates = dependencyGroup {
-        implementation "com.hannesdorfmann:adapterdelegates4-kotlin-dsl:$adapter_delegates_version"
-        implementation "com.hannesdorfmann:adapterdelegates4-kotlin-dsl-layoutcontainer:$adapter_delegates_version"
-        implementation "com.hannesdorfmann:adapterdelegates4-kotlin-dsl-viewbinding:$adapter_delegates_version"
-    }
-
     glide = dependencyGroup {
         implementation 'com.github.bumptech.glide:glide:4.12.0'
         annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
-    }
-
-    compression = dependencyGroup {
-        implementation 'id.zelory:compressor:3.0.1'
-    }
-
-    stripe = dependencyGroup {
-        implementation 'com.stripe:stripe-android:16.1.0'
     }
 }
 

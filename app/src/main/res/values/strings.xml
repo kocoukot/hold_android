@@ -1,11 +1,28 @@
 <resources>
     <string name="app_name">Hold</string>
 
+    <string name="save_text">Save</string>
 
-    <string name="achievements">Достижения</string>
-    <string name="my_records">Мои рекорды</string>
-    <string name="world_records">Мировой рейтинг</string>
+    <string name="achievements">Achievements</string>
+    <string name="my_records">My records</string>
+    <string name="world_records">World ranking</string>
 
-    <string name="empty_result_list">Список результатов пока что пуст</string>
+    <string name="empty_result_list">Results list is currently empty</string>
+    <string name="endgame_question">Wanna continue?</string>
+    <string name="not_enough_for_record">Not enough for next record \n%s</string>
+    <string name="endgame_question_pay">Continue from where you left off</string>
+
+
+    <string name="continue_game">Continue</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="pay_to_continue">Pay</string>
+    <string name="watch_to_continue">Watch Video</string>
+
+    <string name="pay_once">One time %s</string>
+    <string name="pay_for_day">For the whole day %s</string>
+    <string name="say_your_name">Enter your name so that we can save the result</string>
+    <string name="nickname_placeholder">Nickname</string>
+
 
 </resources>

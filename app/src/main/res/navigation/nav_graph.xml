@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/buttonFragment">
 
 
     <fragment
         android:id="@+id/buttonFragment"
-        android:name="com.hold.ui.button.ButtonFragment"
-        android:label="ButtonFragment"
-        tools:layout="@layout/fragment_button">
+        android:name="com.kocoukot.holdgame.ui.button.ButtonFragment"
+        android:label="ButtonFragment">
 
         <action
             android:id="@+id/action_buttonFragment_to_leaderboardFragment"
@@ -20,20 +18,18 @@
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
         <action
-            android:id="@+id/action_buttonFragment_to_askContinueFragment"
-            app:destination="@id/askContinueFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+            android:id="@+id/action_buttonFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+
     </fragment>
     <fragment
         android:id="@+id/leaderboardFragment"
-        android:name="com.hold.ui.leaderboard.LeaderboardFragment"
-        android:label="LeaderboardFragment"
-        tools:layout="@layout/fragment_leaderboard" />
+        android:name="com.kocoukot.holdgame.ui.leaderboard.LeaderboardFragment"
+        android:label="LeaderboardFragment" />
     <fragment
-        android:id="@+id/askContinueFragment"
-        android:name="com.hold.ui.endgame.ask.AskContinueFragment"
-        android:label="AskContinueFragment" />
+        android:id="@+id/profileFragment"
+        android:name="com.kocoukot.holdgame.ui.profile.ProfileFragment"
+        android:label="ProfileFragment" />
+
+
 </navigation>
