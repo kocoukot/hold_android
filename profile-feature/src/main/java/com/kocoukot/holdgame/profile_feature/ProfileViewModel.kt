@@ -2,6 +2,8 @@ package com.kocoukot.holdgame.profile_feature
 
 import androidx.lifecycle.viewModelScope
 import com.kocoukot.holdgame.core_mvi.BaseViewModel
+import com.kocoukot.holdgame.core_mvi.ComposeActions
+import com.kocoukot.holdgame.core_mvi.ReceiveEvent
 import com.kocoukot.holdgame.domain.usecase.user.GetUserNameUseCase
 import com.kocoukot.holdgame.domain.usecase.user.SaveUserNameUseCase
 import com.kocoukot.holdgame.profile_feature.model.ProfileActions
@@ -15,7 +17,7 @@ class ProfileViewModel(
     private val getUserNameUseCase: GetUserNameUseCase,
 ) : BaseViewModel.Base<ProfileState>(
     mState = MutableStateFlow(ProfileState())
-) {
+), ReceiveEvent {
 
     init {
         viewModelScope.launch {
@@ -26,10 +28,7 @@ class ProfileViewModel(
     }
 
     fun setInputActions(action: ProfileActions) {
-        when (action) {
-            ProfileActions.ClickOnBack -> sendEvent(ProfileRoute.OnBack)
-            is ProfileActions.ClickOnSaveNickname -> saveUsername(action.nickname)
-        }
+
     }
 
     private fun saveUsername(nickname: String) {
@@ -41,6 +40,13 @@ class ProfileViewModel(
                     updateInfo { copy(errorText = it.localizedMessage ?: "Some error! =(") }
                 }
             updateInfo { copy(isLoading = false) }
+        }
+    }
+
+    override fun setInputActions(action: ComposeActions) {
+        when (action) {
+            ProfileActions.ClickOnBack -> sendEvent(ProfileRoute.OnBack)
+            is ProfileActions.ClickOnSaveNickname -> saveUsername(action.nickname)
         }
     }
 }

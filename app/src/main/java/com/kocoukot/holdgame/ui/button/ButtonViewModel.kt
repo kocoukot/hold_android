@@ -5,6 +5,8 @@ import android.os.Looper
 import androidx.lifecycle.viewModelScope
 import com.android.billingclient.api.ProductDetails
 import com.kocoukot.holdgame.core_mvi.BaseViewModel
+import com.kocoukot.holdgame.core_mvi.ComposeActions
+import com.kocoukot.holdgame.core_mvi.ReceiveEvent
 import com.kocoukot.holdgame.domain.usecase.user.*
 import com.kocoukot.holdgame.leaderboard_feature.domain.usecase.GetUserMaxRecordUseCase
 import com.kocoukot.holdgame.model.user.GameResult
@@ -28,7 +30,7 @@ class ButtonViewModel(
     private val getGlobalTimeUseCase: GetGlobalTimeUseCase,
 ) : BaseViewModel.Base<MainGameState>(
     mState = MutableStateFlow(MainGameState())
-) {
+), ReceiveEvent {
 
     private var handler = Handler(Looper.getMainLooper())
     private var startTime = 0L
@@ -36,20 +38,15 @@ class ButtonViewModel(
 
     init {
         viewModelScope.launch {
-            val lastResultAsync =
-                withContext(Dispatchers.Default) { getLastResultUseCase.invoke() }
+
             val purchaseDate =
                 withContext(Dispatchers.Default) { getDayPurchaseUseCase.invoke() }
 
-            val userName = withContext(Dispatchers.Default) { getUserNameUseCase.getName() }
-            val localRecords =
-                withContext(Dispatchers.Default) { getUserLocalRecordUseCase.invoke()?.result }
-
             updateInfo {
                 copy(
-                    gameUser = userName,
-                    gameRecord = localRecords,
-                    timer = lastResultAsync,
+                    gameUser = getUserNameUseCase.getName(),
+                    gameRecord = getUserLocalRecordUseCase.invoke()?.result,
+                    timer = getLastResultUseCase.invoke(),
                     couldContinue =
                     if (purchaseDate != null && purchaseDate > 0)
                         CouldContinueType.FOR_DAY
@@ -62,10 +59,10 @@ class ButtonViewModel(
         }
     }
 
-    fun setInputActions(action: ButtonActions) {
+    override fun setInputActions(action: ComposeActions) {
         when (action) {
-            ButtonActions.ClickOnToLeaderboard -> goLeaderboard()
-            ButtonActions.ClickOnToProfile -> goProfile()
+            ButtonActions.ClickOnToLeaderboard -> sendEvent(ButtonRoute.ToLeaderboard)
+            ButtonActions.ClickOnToProfile -> sendEvent(ButtonRoute.ToProfile)
 
             ButtonActions.PressDownButton -> onButtonStartHold()
             ButtonActions.PressUpButton -> onButtonStopHold()
@@ -136,12 +133,17 @@ class ButtonViewModel(
                                 timer = null
                             )
                         }
-
-                        if (mState.value.gameUser == null || mState.value.gameUser?.userName?.isEmpty() == true) {
-                            updateInfo { copy(gameState = GameState.USERNAME_INPUT) }
-                        } else {
-                            updateInfo { copy(gameState = GameState.BUTTON) }
-                        }.also { updateInfo { copy(isLoading = false) } }
+                        updateInfo {
+                            copy(
+                                gameState =
+                                if (mState.value.gameUser == null ||
+                                    mState.value.gameUser?.userName?.isEmpty() == true
+                                )
+                                    GameState.USERNAME_INPUT
+                                else
+                                    GameState.BUTTON
+                            ).also { updateInfo { copy(isLoading = false) } }
+                        }
                     }
                     .onFailure {
                         updateInfo {
@@ -156,9 +158,7 @@ class ButtonViewModel(
     }
 
     private fun nicknameSave(nickName: String) {
-        updateInfo {
-            copy(isLoading = true)
-        }
+        updateInfo { copy(isLoading = true) }
 
         viewModelScope.launch {
             var data = getUserNameUseCase.getName() ?: GameUser()
@@ -239,14 +239,6 @@ class ButtonViewModel(
             }, 0)
         }
 
-    }
-
-    private fun goLeaderboard() {
-        sendEvent(ButtonRoute.ToLeaderboard)
-    }
-
-    private fun goProfile() {
-        sendEvent(ButtonRoute.ToProfile)
     }
 
     private fun update() {
@@ -367,4 +359,6 @@ class ButtonViewModel(
             couldContinue.invoke(false)
         }
     }
+
+
 }

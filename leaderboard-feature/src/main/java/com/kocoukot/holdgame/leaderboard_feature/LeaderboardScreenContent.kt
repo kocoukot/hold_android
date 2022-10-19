@@ -49,7 +49,9 @@ fun LeaderboardScreeContent(viewModel: LeaderboardViewModel) {
                 },
                 navigationIcon = {
                     IconButton(
-                        onClick = { viewModel.setInputActions(LeaderboardActions.ClickOnBack) },
+                        onClick = {
+                            viewModel.setInputActions(LeaderboardActions.ClickOnBack)
+                        },
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_navigation),
