@@ -1,5 +1,6 @@
 package com.kocoukot.holdgame.leaderboard_feature.model
 
+import com.kocoukot.holdgame.core_mvi.ComposeState
 
 
 data class LeaderboardState(
@@ -7,4 +8,4 @@ data class LeaderboardState(
     val isLoading: Boolean = false,
     val selectedRecords: RecordType = RecordType.PERSONAL,
     val data: LeaderboardModel? = null
-)
+) : ComposeState

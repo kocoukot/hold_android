@@ -53,5 +53,6 @@ dependencies {
     // Timber
     implementation 'com.jakewharton.timber:timber:5.0.1'
     implementation project(path: ':core')
+    implementation project(path: ':core-mvi')
 
 }

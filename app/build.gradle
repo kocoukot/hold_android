@@ -111,6 +111,7 @@ apply from: '../dependencies.gradle'
 
 dependencies {
     implementation 'com.google.android.gms:play-services-analytics-impl:18.0.1'
+    implementation project(path: ':core-mvi')
     androidX()
     retrofit()
     google()
@@ -128,6 +129,7 @@ dependencies {
     implementation project(path: ':leaderboard-feature')
     implementation project(path: ':profile-feature')
     implementation project(path: ':core')
+    implementation project(path: ':core-mvi')
 
 
 }

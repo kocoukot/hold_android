@@ -1,5 +1,7 @@
 package com.kocoukot.holdgame.profile_feature.model
 
-sealed class ProfileRoute {
+import com.kocoukot.holdgame.core_mvi.ComposeRoute
+
+sealed class ProfileRoute : ComposeRoute {
     object OnBack : ProfileRoute()
 }

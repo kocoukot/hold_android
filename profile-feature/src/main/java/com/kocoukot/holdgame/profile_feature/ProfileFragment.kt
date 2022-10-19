@@ -6,14 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import com.kocoukot.holdgame.core_mvi.BaseFragment
 import com.kocoukot.holdgame.navController
-import com.kocoukot.holdgame.observeNonNull
 import com.kocoukot.holdgame.profile_feature.model.ProfileRoute
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class ProfileFragment : Fragment() {
-    private val viewModel: ProfileViewModel by viewModel()
+class ProfileFragment : BaseFragment<ProfileViewModel>() {
+    override val viewModel: ProfileViewModel by viewModel()
 
 
     override fun onCreateView(
@@ -21,13 +23,7 @@ class ProfileFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
-        viewModel.steps.observeNonNull(viewLifecycleOwner) { route ->
-            when (route) {
-                ProfileRoute.OnBack -> navController.popBackStack()
-            }
-        }
-
+        super.onCreateView(inflater, container, savedInstanceState)
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(
                 ViewCompositionStrategy.DisposeOnLifecycleDestroyed(viewLifecycleOwner)
@@ -38,4 +34,15 @@ class ProfileFragment : Fragment() {
             }
         }
     }
+
+    override fun observeData() {
+
+        viewModel.steps.onEach { route ->
+            when (route) {
+                ProfileRoute.OnBack -> navController.popBackStack()
+            }
+        }.launchIn(viewLifecycleOwner.lifecycleScope)
+    }
+
+
 }

@@ -1,6 +1,7 @@
 package com.kocoukot.holdgame.ui.button.model
 
 import com.android.billingclient.api.ProductDetails
+import com.kocoukot.holdgame.core_mvi.ComposeState
 import com.kocoukot.holdgame.model.user.GameUser
 
 data class MainGameState(
@@ -16,4 +17,4 @@ data class MainGameState(
     val gameUser: GameUser? = null,
     val isAddLoaded: Boolean = false,
     val productDetails: List<ProductDetails> = emptyList()
-)
+) : ComposeState
