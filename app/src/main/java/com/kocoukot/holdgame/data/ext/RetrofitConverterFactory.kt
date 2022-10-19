@@ -6,7 +6,7 @@ import com.google.gson.TypeAdapter
 import com.google.gson.reflect.TypeToken
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonToken
-import com.kocoukot.holdgame.common.ext.castSafe
+import com.kocoukot.holdgame.castSafe
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody

@@ -4,8 +4,8 @@ import android.accounts.Account
 import android.accounts.AccountManager
 //import com.hold.domain.model.User
 import com.google.gson.Gson
-import com.kocoukot.holdgame.domain.model.user.GameResult
-import com.kocoukot.holdgame.domain.model.user.GameUser
+import com.kocoukot.holdgame.model.user.GameResult
+import com.kocoukot.holdgame.model.user.GameUser
 
 
 class AccountStorage(

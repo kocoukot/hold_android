@@ -1,6 +1,6 @@
 package com.kocoukot.holdgame.ui.button.model
 
-import com.kocoukot.holdgame.domain.model.EndgameButtons
+import com.kocoukot.holdgame.model.EndgameButtons
 
 
 data class ButtonType(

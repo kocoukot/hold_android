@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.navigation.fragment.NavHostFragment
-import com.kocoukot.holdgame.common.ext.castSafe
+import com.kocoukot.holdgame.castSafe
 import com.kocoukot.holdgame.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
