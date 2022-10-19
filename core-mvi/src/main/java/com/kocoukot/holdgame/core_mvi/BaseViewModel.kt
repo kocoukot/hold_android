@@ -25,7 +25,7 @@ interface BaseViewModel : RouteCommunication, ReceiveEvent {
             viewModelScope.launch { mSteps.send(event) }
         }
 
-        override fun updateInfo(info: T.() -> T) {
+        override fun updateInfo(info: suspend T.() -> T) {
             viewModelScope.launch {
                 mState.update { info.invoke(it) }
             }

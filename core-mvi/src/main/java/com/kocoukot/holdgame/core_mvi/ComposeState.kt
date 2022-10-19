@@ -6,6 +6,6 @@ interface ComposeState
 
 interface StateCommunication<T> {
     val state: StateFlow<ComposeState>
-    fun updateInfo(info: T.() -> T)
+    fun updateInfo(info: suspend T.() -> T)
 }
 

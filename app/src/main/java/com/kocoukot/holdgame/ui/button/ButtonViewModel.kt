@@ -12,7 +12,6 @@ import com.kocoukot.holdgame.model.user.GameUser
 import com.kocoukot.holdgame.ui.button.model.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -100,8 +99,8 @@ class ButtonViewModel(
                         }
                 }
             }
-            GameState.USERNAME_INPUT -> mState.value =
-                mState.value.copy(gameState = GameState.BUTTON)
+            GameState.USERNAME_INPUT ->
+                updateInfo { copy(gameState = GameState.BUTTON) }
         }
     }
 
@@ -157,25 +156,31 @@ class ButtonViewModel(
     }
 
     private fun nicknameSave(nickName: String) {
-        mState.value = mState.value.copy(isLoading = true)
+        updateInfo {
+            copy(isLoading = true)
+        }
+
         viewModelScope.launch {
             var data = getUserNameUseCase.getName() ?: GameUser()
             data = data.copy(userName = nickName)
             data.let { user ->
                 kotlin.runCatching { saveUserNameUseCase.saveName(nickName, true) }
                     .onSuccess {
-                        mState.value = mState.value.copy(
-                            gameUser = user,
-                            gameState = GameState.BUTTON,
-                            isLoading = false
-                        )
+                        updateInfo {
+                            copy(
+                                gameUser = user,
+                                gameState = GameState.BUTTON,
+                                isLoading = false
+                            )
+                        }
                     }
                     .onFailure {
-                        mState.value =
-                            mState.value.copy(
+                        updateInfo {
+                            copy(
                                 errorText = it.localizedMessage ?: "Some error! =(",
                                 isLoading = false
                             )
+                        }
                     }
             }
         }
@@ -204,29 +209,31 @@ class ButtonViewModel(
                     saveLastResultUseCase.invoke(timer)
                 }
             }
-            mState.value = mState.value.copy(
-                endGameData = EndgameModel(
-                    recordValue = gameRecord,
-                    currentValue = newValue,
-                ),
-                couldContinue = if (mState.value.couldContinue == CouldContinueType.FOR_DAY) CouldContinueType.FOR_DAY else CouldContinueType.NONE,
-                gameState = GameState.END_GAME
-            )
+            updateInfo {
+                copy(
+                    endGameData = EndgameModel(
+                        recordValue = gameRecord,
+                        currentValue = newValue,
+                    ),
+                    couldContinue = if (mState.value.couldContinue == CouldContinueType.FOR_DAY) CouldContinueType.FOR_DAY else CouldContinueType.NONE,
+                    gameState = GameState.END_GAME
+                )
+            }
         }
     }
 
 
     private fun startTimer() {
         viewModelScope.launch {
-            if (mState.value.couldContinue == CouldContinueType.NONE) {
-                mState.value = mState.value.copy(timer = null)
-                startTime = System.currentTimeMillis()
+            startTime = if (mState.value.couldContinue == CouldContinueType.NONE) {
+                updateInfo { copy(timer = null) }
+                System.currentTimeMillis()
             } else {
-                startTime = System.currentTimeMillis() - (mState.value.timer ?: 0L)
+                System.currentTimeMillis() - (mState.value.timer ?: 0L)
             }
-
-            mState.value =
-                mState.value.copy(gameRecord = getUserLocalRecordUseCase.invoke()?.result)
+            getUserLocalRecordUseCase.invoke()?.result.let { result ->
+                updateInfo { copy(gameRecord = result) }
+            }
             handler.postDelayed({
                 update()
             }, 0)
@@ -243,7 +250,7 @@ class ButtonViewModel(
     }
 
     private fun update() {
-        mState.value = mState.value.copy(timer = System.currentTimeMillis() - startTime)
+        updateInfo { copy(timer = System.currentTimeMillis() - startTime) }
         handler.postDelayed({
             update()
         }, 0)
@@ -252,16 +259,20 @@ class ButtonViewModel(
     private fun continueGame() {
         checkPurchaseValidation {
             if (it) {
-                mState.value = mState.value.copy(
-                    endgameState = EndgameState.END_OR_CONTINUE,
-                    gameState = GameState.BUTTON,
-                    couldContinue = CouldContinueType.FOR_DAY,
-                )
+                updateInfo {
+                    copy(
+                        endgameState = EndgameState.END_OR_CONTINUE,
+                        gameState = GameState.BUTTON,
+                        couldContinue = CouldContinueType.FOR_DAY,
+                    )
+                }
             } else {
-                mState.value = mState.value.copy(
-                    endgameState = EndgameState.PAY_OR_WATCH,
-                    couldContinue = CouldContinueType.NONE,
-                )
+                updateInfo {
+                    copy(
+                        endgameState = EndgameState.PAY_OR_WATCH,
+                        couldContinue = CouldContinueType.NONE,
+                    )
+                }
             }
         }
     }
@@ -284,12 +295,13 @@ class ButtonViewModel(
                 saveLastResultUseCase.invoke(timer)
             }
         }
-
-        mState.value = mState.value.copy(
-            gameState = GameState.BUTTON,
-            couldContinue = CouldContinueType.SINGLE,
-            endgameState = EndgameState.END_OR_CONTINUE
-        )
+        updateInfo {
+            copy(
+                gameState = GameState.BUTTON,
+                couldContinue = CouldContinueType.SINGLE,
+                endgameState = EndgameState.END_OR_CONTINUE
+            )
+        }
     }
 
     fun onUserGotTryForDay() {
@@ -302,8 +314,8 @@ class ButtonViewModel(
         viewModelScope.launch {
             saveDayPurchaseDateUseCase.invoke(currentDate)
         }
-        mState.update {
-            it.copy(
+        updateInfo {
+            copy(
                 gameState = GameState.BUTTON,
                 couldContinue = CouldContinueType.FOR_DAY,
                 endgameState = EndgameState.END_OR_CONTINUE
