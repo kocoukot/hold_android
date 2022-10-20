@@ -22,5 +22,4 @@ class ProfileFragment : BaseFragment<ProfileViewModel>(
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
-
 }
