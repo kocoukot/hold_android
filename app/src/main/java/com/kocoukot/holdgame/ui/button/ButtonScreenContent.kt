@@ -102,6 +102,7 @@ fun MainButtonScreenContent(viewModel: ButtonViewModel) {
                                 viewModel.setInputActions(ButtonActions.ClickOnToLeaderboard)
                             },
                             modifier = Modifier
+
                                 .size(46.dp)
                                 .background(
                                     HTheme.colors.primaryWhite30,

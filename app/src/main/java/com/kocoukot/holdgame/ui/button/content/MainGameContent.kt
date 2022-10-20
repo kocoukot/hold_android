@@ -11,7 +11,10 @@ import androidx.compose.foundation.focusable
 import androidx.compose.foundation.interaction.Interaction
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.progressSemantics
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -90,8 +93,7 @@ fun MainGameContent(
 
 
     ConstraintLayout(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = modifier
             .padding(bottom = 120.dp)
     ) {
         val (button, text, hint) = createRefs()
