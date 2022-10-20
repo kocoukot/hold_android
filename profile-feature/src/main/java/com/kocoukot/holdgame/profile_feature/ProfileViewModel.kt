@@ -27,10 +27,6 @@ class ProfileViewModel(
         }
     }
 
-    fun setInputActions(action: ProfileActions) {
-
-    }
-
     private fun saveUsername(nickname: String) {
         updateInfo { copy(isLoading = true) }
         viewModelScope.launch {

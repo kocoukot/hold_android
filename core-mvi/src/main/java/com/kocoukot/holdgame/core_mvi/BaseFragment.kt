@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModel
 abstract class BaseFragment<VM : ViewModel> : Fragment() {
     protected abstract val screenContent: @Composable (VM) -> Unit
     protected abstract val viewModel: VM
+
     protected abstract fun observeData()
 
     override fun onCreateView(
@@ -30,6 +31,4 @@ abstract class BaseFragment<VM : ViewModel> : Fragment() {
             }
         }
     }
-
-
 }
