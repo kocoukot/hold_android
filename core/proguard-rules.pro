@@ -19,3 +19,14 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+    -keepclassmembers class com.kocoukot.holdgame.domain.** { <fields>; }
+
+    -keepclassmembers class * implements java.io.Serializable {
+            private static final java.io.ObjectStreamField[] serialPersistentFields;
+            private void writeObject(java.io.ObjectOutputStream);
+            private void readObject(java.io.ObjectInputStream);
+            java.lang.Object writeReplace();
+            java.lang.Object readResolve();
+    }
+        -keep class com.google.android.apps.authenticator.** {*;}

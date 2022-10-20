@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.kocoukot.holdgame.compose.theme.HTheme
 import com.kocoukot.holdgame.leaderboard_feature.R
-import com.kocoukot.holdgame.leaderboard_feature.model.RecordType
+import com.kocoukot.holdgame.leaderboard_feature.domain.RecordType
 import timber.log.Timber
 
 @Composable

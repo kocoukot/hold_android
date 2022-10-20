@@ -22,9 +22,9 @@ import com.kocoukot.holdgame.compose.theme.HTheme
 import com.kocoukot.holdgame.compose.theme.movementSpec
 import com.kocoukot.holdgame.compose.theme.transformationSpec
 import com.kocoukot.holdgame.model.EndgameButtons
+import com.kocoukot.holdgame.ui.button.domain.EndgameModel
+import com.kocoukot.holdgame.ui.button.domain.EndgameState
 import com.kocoukot.holdgame.ui.button.model.ButtonActions
-import com.kocoukot.holdgame.ui.button.model.EndgameModel
-import com.kocoukot.holdgame.ui.button.model.EndgameState
 import com.skydoves.orbitary.Orbitary
 import com.skydoves.orbitary.animateSharedElementTransition
 import com.skydoves.orbitary.rememberContentWithOrbitaryScope

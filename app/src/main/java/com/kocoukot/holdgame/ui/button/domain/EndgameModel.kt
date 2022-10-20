@@ -1,4 +1,4 @@
-package com.kocoukot.holdgame.ui.button.model
+package com.kocoukot.holdgame.ui.button.domain
 
 import com.kocoukot.holdgame.model.user.GameResult
 
