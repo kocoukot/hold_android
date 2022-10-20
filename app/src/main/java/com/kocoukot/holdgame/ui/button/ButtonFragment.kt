@@ -2,13 +2,9 @@ package com.kocoukot.holdgame.ui.button
 
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.runtime.Composable
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.android.billingclient.api.*
 import com.google.android.gms.ads.AdError
@@ -18,23 +14,29 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import com.kocoukot.holdgame.BuildConfig
+import com.kocoukot.holdgame.Constant.ONE_DAY_PRODUCT_ID
+import com.kocoukot.holdgame.Constant.ONE_TRY_PRODUCT_ID
 import com.kocoukot.holdgame.R
-import com.kocoukot.holdgame.common.ext.navController
+import com.kocoukot.holdgame.core_mvi.BaseFragment
+import com.kocoukot.holdgame.navController
 import com.kocoukot.holdgame.ui.button.model.ButtonRoute
-import com.kocoukot.holdgame.ui.common.Constant.ONE_DAY_PRODUCT_ID
-import com.kocoukot.holdgame.ui.common.Constant.ONE_TRY_PRODUCT_ID
-import com.kocoukot.holdgame.ui.common.ext.observeNonNull
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-class ButtonFragment : Fragment() {
-    private val viewModel: ButtonViewModel by viewModel()
+class ButtonFragment : BaseFragment<ButtonViewModel>() {
+    override val viewModel: ButtonViewModel by viewModel()
     private var mRewardedAd: RewardedAd? = null
     private var TAG = "MainActivity"
     private val adRequest = AdRequest.Builder().build()
+
+    override val screenContent: @Composable (ButtonViewModel) -> Unit =
+        @Composable { MainButtonScreenContent(viewModel) }
+
 
     private val billingClient by lazy {
         BillingClient.newBuilder(requireContext())
@@ -64,13 +66,16 @@ class ButtonFragment : Fragment() {
         }
 
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onStart() {
+        super.onStart()
+        activity?.window?.apply {
+            statusBarColor = ContextCompat.getColor(requireContext(), R.color.main_background)
+            navigationBarColor = ContextCompat.getColor(requireContext(), R.color.main_background)
+        }
+    }
 
-        viewModel.steps.observeNonNull(viewLifecycleOwner) { route ->
+    override fun observeData() {
+        viewModel.observeSteps().onEach { route ->
             when (route) {
                 ButtonRoute.ToLeaderboard -> navController.navigate(R.id.action_buttonFragment_to_leaderboardFragment)
                 ButtonRoute.ToProfile -> navController.navigate(R.id.action_buttonFragment_to_profileFragment)
@@ -78,27 +83,12 @@ class ButtonFragment : Fragment() {
                 ButtonRoute.ShowAd -> showAd()
                 is ButtonRoute.LaunchBill -> launchBillFlow(route.product)
             }
-        }
-        activity?.window?.apply {
-            statusBarColor = ContextCompat.getColor(requireContext(), R.color.main_background)
-            navigationBarColor = ContextCompat.getColor(requireContext(), R.color.main_background)
-        }
-        return ComposeView(requireContext()).apply {
-            setViewCompositionStrategy(
-                ViewCompositionStrategy.DisposeOnLifecycleDestroyed(viewLifecycleOwner)
-            )
-
-            setContent {
-                MainButtonScreenContent(viewModel)
-            }
-        }
+        }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         billStartConnection()
-
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

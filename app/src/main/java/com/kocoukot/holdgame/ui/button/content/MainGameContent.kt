@@ -11,7 +11,10 @@ import androidx.compose.foundation.focusable
 import androidx.compose.foundation.interaction.Interaction
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.progressSemantics
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -31,11 +34,12 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import com.kocoukot.holdgame.DateUtil
 import com.kocoukot.holdgame.R
-import com.kocoukot.holdgame.common.compose.theme.HTheme
+import com.kocoukot.holdgame.compose.elements.CircularGameProgress
+import com.kocoukot.holdgame.compose.theme.HTheme
 import com.kocoukot.holdgame.ui.button.coloredShadow
 import com.kocoukot.holdgame.ui.button.model.ButtonActions
-import com.kocoukot.holdgame.utils.DateUtil
 import timber.log.Timber
 
 @Composable
@@ -89,8 +93,7 @@ fun MainGameContent(
 
 
     ConstraintLayout(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = modifier
             .padding(bottom = 120.dp)
     ) {
         val (button, text, hint) = createRefs()

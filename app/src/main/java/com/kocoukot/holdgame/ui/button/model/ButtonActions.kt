@@ -1,7 +1,9 @@
 package com.kocoukot.holdgame.ui.button.model
 
+import com.kocoukot.holdgame.core_mvi.ComposeActions
 
-sealed class ButtonActions {
+
+sealed class ButtonActions : ComposeActions {
     object ClickOnToLeaderboard : ButtonActions()
     object ClickOnToProfile : ButtonActions()
     object ClickOnBack : ButtonActions()

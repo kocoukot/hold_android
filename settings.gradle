@@ -14,3 +14,8 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Hold"
 include ':app'
+include ':leaderboard-feature'
+include ':core'
+include ':profile-feature'
+include ':core-mvi'
+include ':benchmark'

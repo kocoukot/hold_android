@@ -28,12 +28,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.kocoukot.holdgame.R
-import com.kocoukot.holdgame.common.compose.theme.HTheme
+import com.kocoukot.holdgame.compose.elements.NameInputContent
+import com.kocoukot.holdgame.compose.theme.HTheme
 import com.kocoukot.holdgame.ui.button.content.EndGameContent
 import com.kocoukot.holdgame.ui.button.content.MainGameContent
-import com.kocoukot.holdgame.ui.button.content.NameInputContent
+import com.kocoukot.holdgame.ui.button.domain.GameState
 import com.kocoukot.holdgame.ui.button.model.ButtonActions
-import com.kocoukot.holdgame.ui.button.model.GameState
 import com.kocoukot.holdgame.ui.common.compose.DialogLoadingContent
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -102,6 +102,7 @@ fun MainButtonScreenContent(viewModel: ButtonViewModel) {
                                 viewModel.setInputActions(ButtonActions.ClickOnToLeaderboard)
                             },
                             modifier = Modifier
+
                                 .size(46.dp)
                                 .background(
                                     HTheme.colors.primaryWhite30,

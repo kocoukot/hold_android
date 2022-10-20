@@ -3,7 +3,7 @@ package com.kocoukot.holdgame.di
 import android.content.Context
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
-import com.kocoukot.holdgame.common.ext.cast
+import com.kocoukot.holdgame.cast
 import com.kocoukot.holdgame.data.local.AccountStorage
 import com.kocoukot.holdgame.data.local.AssetsStorage
 import com.kocoukot.holdgame.data.local.ObjectsSharedPreferencesStorage

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="say_your_name">Enter your name so that we can save the result</string>
+    <string name="nickname_placeholder">Nickname</string>
+    <string name="save_text">Save</string>
+
+</resources>

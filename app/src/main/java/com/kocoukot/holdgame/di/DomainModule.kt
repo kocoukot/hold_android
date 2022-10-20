@@ -1,10 +1,10 @@
 package com.kocoukot.holdgame.di
 
 import com.kocoukot.holdgame.domain.usecase.SetSessionTokenUseCase
-import com.kocoukot.holdgame.domain.usecase.leaderboard.GetGlobalResultsUseCase
-import com.kocoukot.holdgame.domain.usecase.leaderboard.GetUserLocalRecordUseCase
-import com.kocoukot.holdgame.domain.usecase.leaderboard.GetUserResultsUseCase
 import com.kocoukot.holdgame.domain.usecase.user.*
+import com.kocoukot.holdgame.leaderboard_feature.domain.usecase.GetGlobalResultsUseCase
+import com.kocoukot.holdgame.leaderboard_feature.domain.usecase.GetUserMaxRecordUseCase
+import com.kocoukot.holdgame.leaderboard_feature.domain.usecase.GetUserResultsUseCase
 import org.koin.dsl.module
 
 val useCaseModule = module {
@@ -15,7 +15,7 @@ val useCaseModule = module {
 
     factory { GetGlobalResultsUseCase(get()) }
 
-    factory { GetUserLocalRecordUseCase(get()) }
+    factory { GetUserMaxRecordUseCase(get()) }
 
     factory { GetUserNameUseCase(get()) }
 

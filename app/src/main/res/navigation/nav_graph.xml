@@ -24,11 +24,11 @@
     </fragment>
     <fragment
         android:id="@+id/leaderboardFragment"
-        android:name="com.kocoukot.holdgame.ui.leaderboard.LeaderboardFragment"
+        android:name="com.kocoukot.holdgame.leaderboard_feature.LeaderboardFragment"
         android:label="LeaderboardFragment" />
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.kocoukot.holdgame.ui.profile.ProfileFragment"
+        android:name="com.kocoukot.holdgame.profile_feature.ProfileFragment"
         android:label="ProfileFragment" />
 
 

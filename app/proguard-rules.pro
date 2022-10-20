@@ -33,7 +33,7 @@
       @com.google.gson.annotations.SerializedName <fields>;
     }
 
-    -keepclassmembers class com.kocoukot.holdgame.domain.** { <fields>; }
+    -keepclassmembers class com.kocoukot.holdgame.ui.button.domain.** { <fields>; }
 
     -keepclassmembers class * implements java.io.Serializable {
             private static final java.io.ObjectStreamField[] serialPersistentFields;
