@@ -1,6 +1,7 @@
 package com.kocoukot.holdgame.leaderboard_feature.model
 
 import com.kocoukot.holdgame.core_mvi.ComposeState
+import com.kocoukot.holdgame.leaderboard_feature.domain.RecordType
 
 
 data class LeaderboardState(

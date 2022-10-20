@@ -14,8 +14,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.kocoukot.holdgame.compose.theme.HTheme
+import com.kocoukot.holdgame.leaderboard_feature.domain.RecordType
 import com.kocoukot.holdgame.leaderboard_feature.model.LeaderboardActions
-import com.kocoukot.holdgame.leaderboard_feature.model.RecordType
 import com.kocoukot.holdgame.leaderboard_feature.screen.GlobalRecordRow
 import com.kocoukot.holdgame.leaderboard_feature.screen.PersonalRecordRow
 import com.kocoukot.holdgame.leaderboard_feature.screen.RecordTabBar
