@@ -10,6 +10,16 @@ interface ComposeRoute {
     object OnBack : ComposeRoute
 }
 
+interface ComposeRouteNavigation {
+    val destination: Int?
+        get() = null
+}
+
+interface ComposeRouteFinishApp
+
+interface ComposeRoutePermission
+
+
 interface ComposeState
 
 interface StateCommunication<T> {

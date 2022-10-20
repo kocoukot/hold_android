@@ -88,7 +88,7 @@ class ButtonViewModel(
 
     private fun backPressed() {
         when (state.value.gameState) {
-            GameState.BUTTON -> ButtonRoute.CloseApp
+            GameState.BUTTON -> sendEvent(ButtonRoute.CloseApp)
             GameState.END_GAME -> {
                 when (mState.value.endgameState) {
                     EndgameState.END_OR_CONTINUE -> clickGoBack()

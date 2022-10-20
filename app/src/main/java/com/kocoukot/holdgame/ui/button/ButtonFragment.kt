@@ -18,11 +18,9 @@ import com.kocoukot.holdgame.Constant.ONE_DAY_PRODUCT_ID
 import com.kocoukot.holdgame.Constant.ONE_TRY_PRODUCT_ID
 import com.kocoukot.holdgame.R
 import com.kocoukot.holdgame.core_mvi.BaseFragment
-import com.kocoukot.holdgame.navController
+import com.kocoukot.holdgame.core_mvi.ComposeRoute
 import com.kocoukot.holdgame.ui.button.model.ButtonRoute
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -72,18 +70,6 @@ class ButtonFragment : BaseFragment<ButtonViewModel>() {
             statusBarColor = ContextCompat.getColor(requireContext(), R.color.main_background)
             navigationBarColor = ContextCompat.getColor(requireContext(), R.color.main_background)
         }
-    }
-
-    override fun observeData() {
-        viewModel.observeSteps().onEach { route ->
-            when (route) {
-                ButtonRoute.ToLeaderboard -> navController.navigate(R.id.action_buttonFragment_to_leaderboardFragment)
-                ButtonRoute.ToProfile -> navController.navigate(R.id.action_buttonFragment_to_profileFragment)
-                ButtonRoute.CloseApp -> requireActivity().finish()
-                ButtonRoute.ShowAd -> showAd()
-                is ButtonRoute.LaunchBill -> launchBillFlow(route.product)
-            }
-        }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -225,6 +211,15 @@ class ButtonFragment : BaseFragment<ButtonViewModel>() {
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
                 billingClient.consumePurchase(consumeParams)
+            }
+        }
+    }
+
+    override fun observeData(cb: ((ComposeRoute) -> Unit)?) {
+        super.observeData { route ->
+            when (route) {
+                ButtonRoute.ShowAd -> showAd()
+                is ButtonRoute.LaunchBill -> launchBillFlow(route.product)
             }
         }
     }

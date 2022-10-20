@@ -6,12 +6,13 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-interface BaseViewModel : SendEvent {
+interface BaseViewModel : SendEvent, ObserveSteps<ComposeRoute> {
+
 
     open class Base<T : ComposeState>(
         private val mSteps: Channel<ComposeRoute> = Channel(),
         protected val mState: MutableStateFlow<T>,
-    ) : ViewModel(), BaseViewModel, StateCommunication<T>, ObserveSteps<ComposeRoute> {
+    ) : ViewModel(), BaseViewModel, StateCommunication<T> {
 
         override val state = mState.asStateFlow()
 
@@ -32,7 +33,7 @@ interface BaseViewModel : SendEvent {
 }
 
 interface ObserveSteps<T : ComposeRoute> {
-    fun observeSteps(): Flow<T>
+    fun observeSteps(): Flow<ComposeRoute>
 }
 
 interface SendEvent {
