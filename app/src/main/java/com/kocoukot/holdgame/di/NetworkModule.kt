@@ -2,7 +2,6 @@ package com.kocoukot.holdgame.di
 
 
 import com.google.gson.GsonBuilder
-import com.kocoukot.holdgame.BuildConfig
 import com.kocoukot.holdgame.data.ext.RetrofitConverterFactory
 import com.kocoukot.holdgame.data.network.Path
 import com.kocoukot.holdgame.data.network.service.LeaderboardService
@@ -47,7 +46,7 @@ val networkModule = module {
         val path = parameters.getOrNull<String>()
         Retrofit.Builder()
             .client(get())
-            .baseUrl("${BuildConfig.API_GATEWAY}/$path/")
+            .baseUrl("BuildConfig.API_GATEWAY}/$path/")
             .addConverterFactory(RetrofitConverterFactory(get()))
             .addCallAdapterFactory(RxJava2CallAdapterFactory.createAsync())
             .build()
