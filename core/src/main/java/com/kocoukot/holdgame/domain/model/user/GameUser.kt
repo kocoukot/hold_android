@@ -8,8 +8,6 @@ data class GameUser(
     val id: String = "",
     val avatar: String? = "",
     var userName: String = "",
-//    val maxRecord: Long = 0,
-//    val maxRecordDate: Long = System.currentTimeMillis(),
     val records: MutableList<GameResult> = mutableListOf(),
 ) : Parcelable {
 

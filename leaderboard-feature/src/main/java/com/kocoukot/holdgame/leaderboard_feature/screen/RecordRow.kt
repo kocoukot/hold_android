@@ -130,7 +130,7 @@ fun GlobalRecordRow(
                 ) {
 
                 Text(
-                    gameUser.userName,
+                    gameUser.userName.takeIf { it.isNotEmpty() } ?: "Unnamed user",
                     style = HTheme.typography.commonText,
                     maxLines = 2,
                     color = if (gameUser.id.equals(userId, true))

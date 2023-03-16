@@ -11,13 +11,6 @@ data class GameGlobalUser(
     val records: GameResult
 ) : Parcelable {
 
-    //                    GameGlobalUser(
-//                        id = result["id"] as String,
-//                        avatar = null,
-//                        userName = result["userName"] as String,
-//                        records = GameResult(date = 0, result = 0)
-
-
     companion object {
         fun from(map: Map<String, Any>) = object {
             val id: String by map
