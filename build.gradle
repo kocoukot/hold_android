@@ -12,7 +12,7 @@ buildscript {
         // Build versions
         version_major = 0
         version_minor = 1
-        version_patch = 3
+        version_patch = 4
         build_number = 1
     }
 

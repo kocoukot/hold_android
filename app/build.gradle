@@ -34,9 +34,6 @@ android {
         file("local.properties").withInputStream { props.load(it) }
 
         testInstrumentationRunnerArgument 'androidx.benchmark.enabledRules', 'BaselineProfile'
-
-        buildConfigField "String", "API_GATEWAY", '"https://holdtest.herokuapp.com"'
-        buildConfigField "String", "API_KEY", "\"${props.getProperty("API_KEY")}\""
         buildConfigField "String", "GOOGLE_WATCH_KEY", "\"${props.getProperty("GOOGLE_WATCH_KEY")}\""
 
 
