@@ -1,7 +1,7 @@
 package com.kocoukot.holdgame.domain.repo
 
-import com.kocoukot.holdgame.model.user.GameResult
-import com.kocoukot.holdgame.model.user.GameUser
+import com.kocoukot.holdgame.domain.model.user.GameResult
+import com.kocoukot.holdgame.domain.model.user.GameUser
 
 
 interface AccountRepository {

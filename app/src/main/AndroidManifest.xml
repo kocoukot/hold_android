@@ -46,7 +46,6 @@
                 android:resource="@xml/authenticator" />
         </service>
 
-        <profileable android:shell="true" />
     </application>
 
 </manifest>

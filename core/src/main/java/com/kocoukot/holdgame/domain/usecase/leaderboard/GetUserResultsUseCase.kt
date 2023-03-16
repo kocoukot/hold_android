@@ -1,6 +1,6 @@
-package com.kocoukot.holdgame.leaderboard_feature.domain.usecase
+package com.kocoukot.holdgame.domain.usecase.leaderboard
 
-import com.kocoukot.holdgame.leaderboard_feature.domain.LeaderboardRepository
+import com.kocoukot.holdgame.domain.repo.LeaderboardRepository
 
 
 class GetUserResultsUseCase(

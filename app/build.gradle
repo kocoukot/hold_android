@@ -1,5 +1,3 @@
-import org.apache.tools.ant.taskdefs.condition.Os
-
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
@@ -7,12 +5,6 @@ plugins {
     id 'kotlin-parcelize'
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
-}
-
-static String getKeystorePath() {
-    if (Os.isFamily(Os.FAMILY_WINDOWS)) return "c:/Keystore/hold"
-    if (Os.isFamily(Os.FAMILY_MAC)) return "${System.properties['user.home']}/Keystore/hold"
-    return System.getenv("HEAVYE_KEYSTORE_PATH")
 }
 
 def computeVersionName() {
@@ -49,37 +41,22 @@ android {
 
 
         signingConfigs {
-            debug_config {
-                try {
-                    keyAlias props.getProperty("KEY_ALIAS")
-                    keyPassword props.getProperty("KEY_PASSWORD")
-                    storeFile file(getKeystorePath())
-                    storePassword props.getProperty("KEYSTORE_PASSWORD")
-                } catch (ignored) {
-                    throw new InvalidUserDataException("You should define KEYSTORE_PASSWORD and KEY_PASSWORD in gradle.properties.")
-                }
-            }
-            default_config {
-                try {
-                    keyAlias props.getProperty("KEY_ALIAS")
-                    keyPassword props.getProperty("KEY_PASSWORD")
-                    storeFile file(getKeystorePath())
-                    storePassword props.getProperty("KEYSTORE_PASSWORD")
-                } catch (ignored) {
-                    throw new InvalidUserDataException("You should define KEYSTORE_PASSWORD and KEY_PASSWORD in gradle.properties.")
-                }
-            }
+//            default_config {
+//                try {
+//                    keyAlias props.getProperty("KEY_ALIAS")
+//                    keyPassword props.getProperty("KEY_PASSWORD")
+//                    storeFile file(getKeystorePath())
+//                    storePassword props.getProperty("KEYSTORE_PASSWORD")
+//                } catch (ignored) {
+//                    throw new InvalidUserDataException("You should define KEYSTORE_PASSWORD and KEY_PASSWORD in gradle.properties.")
+//                }
+//            }
         }
 
 
     }
 
     buildTypes {
-        debug {
-            minifyEnabled false
-            debuggable true
-            signingConfig signingConfigs.default_config
-        }
         benchmark {
             initWith buildTypes.release
             signingConfig signingConfigs.debug
@@ -93,7 +70,7 @@ android {
         release {
             minifyEnabled true
             debuggable false
-            signingConfig signingConfigs.default_config
+//            signingConfig signingConfigs.default_config
 
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }

@@ -2,7 +2,6 @@ package com.kocoukot.holdgame.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentManager
 import androidx.navigation.fragment.NavHostFragment
 import com.kocoukot.holdgame.castSafe
 import com.kocoukot.holdgame.databinding.ActivityMainBinding
@@ -16,12 +15,6 @@ class MainActivity : AppCompatActivity() {
             .castSafe<NavHostFragment>()
     }
 
-    private val onBackStackChangedListener by lazy {
-        FragmentManager.OnBackStackChangedListener {
-
-        }
-    }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,16 +23,5 @@ class MainActivity : AppCompatActivity() {
                 .also { binding = it }
                 .root
         )
-        navHost?.apply {
-            childFragmentManager.addOnBackStackChangedListener(onBackStackChangedListener)
-        }
-        setupBottomNavigation()
-    }
-
-    private fun setupBottomNavigation() = with(binding) {
-
-        navHost?.let {
-
-        }
     }
 }

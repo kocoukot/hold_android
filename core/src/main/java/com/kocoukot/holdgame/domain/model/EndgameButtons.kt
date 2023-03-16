@@ -1,4 +1,4 @@
-package com.kocoukot.holdgame.model
+package com.kocoukot.holdgame.domain.model
 
 enum class EndgameButtons {
     CONTINUE,

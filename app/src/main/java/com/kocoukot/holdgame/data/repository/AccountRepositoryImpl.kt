@@ -1,13 +1,13 @@
 package com.kocoukot.holdgame.data.repository
 
 
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.kocoukot.holdgame.DateUtil.convertGlobalTime
 import com.kocoukot.holdgame.data.local.AccountStorage
-import com.kocoukot.holdgame.data.network.model.request.ResultRequest
-import com.kocoukot.holdgame.data.network.model.request.UpdateUserRequest
 import com.kocoukot.holdgame.data.network.service.UserService
+import com.kocoukot.holdgame.domain.model.user.GameResult
 import com.kocoukot.holdgame.domain.repo.AccountRepository
-import com.kocoukot.holdgame.model.user.GameResult
 import timber.log.Timber
 import java.time.ZoneId
 
@@ -15,6 +15,8 @@ class AccountRepositoryImpl(
     private val accountStorage: AccountStorage,
     private val userService: UserService,
 ) : AccountRepository {
+
+    private val firestoreDb = Firebase.firestore
 
     override var sessionToken: String = ""
         get() = accountStorage.sessionToken ?: ""
@@ -27,29 +29,42 @@ class AccountRepositoryImpl(
         }
 
     override suspend fun saveUserName(userName: String, isNew: Boolean): Boolean {
-        val request = UpdateUserRequest(
-            id = sessionToken,
-            name = userName,
-            avatar = "",
-        )
-        return if (isNew) {
-            userService.insertUser(request)
-        } else {
-            userService.updateUser(request)
-        }.also {
-            accountStorage.saveName(userName)
+        accountStorage.apply {
+            saveName(userName)
+            accountStorage.getUserName()?.let { gameUser ->
+
+                firestoreDb.collection("results")
+                    .document(gameUser.id)
+                    .set(gameUser.toGlobalUser())
+                    .addOnSuccessListener { document ->
+                        Timber.tag("hold_tag").d("document added")
+                    }
+                    .addOnFailureListener { exception ->
+                        Timber.tag("hold_tag").w(exception, "Error getting documents: ")
+                    }
+
+            }
         }
+        return isNew
     }
 
     override suspend fun setNewResult(result: GameResult) {
-        userService.addUserResult(
-            ResultRequest(
-                userId = sessionToken,
-                date = result.date,
-                value = result.result,
-            )
-        )
-        accountStorage.setNewResult(result)
+        accountStorage.apply {
+            setNewResult(result)
+            getUserName()?.let { gameUser ->
+                val sendResult = gameUser.toGlobalUser()
+
+                firestoreDb.collection("results")
+                    .document(gameUser.id)
+                    .set(sendResult)
+                    .addOnSuccessListener { document ->
+                        Timber.tag("hold_tag").d("document added")
+                    }
+                    .addOnFailureListener { exception ->
+                        Timber.tag("hold_tag").w(exception, "Error getting documents: ")
+                    }
+            }
+        }
     }
 
     override suspend fun getUser() = accountStorage.getUserName()

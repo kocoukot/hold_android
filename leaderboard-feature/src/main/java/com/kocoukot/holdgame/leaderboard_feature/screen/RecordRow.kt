@@ -20,9 +20,9 @@ import com.kocoukot.holdgame.DateUtil.getRecordDate
 import com.kocoukot.holdgame.DateUtil.getRecordResult
 import com.kocoukot.holdgame.compose.elements.CircularGameProgress
 import com.kocoukot.holdgame.compose.theme.HTheme
+import com.kocoukot.holdgame.domain.model.user.GameGlobalUser
+import com.kocoukot.holdgame.domain.model.user.GameResult
 import com.kocoukot.holdgame.leaderboard_feature.R
-import com.kocoukot.holdgame.model.user.GameGlobalUser
-import com.kocoukot.holdgame.model.user.GameResult
 import timber.log.Timber
 
 
@@ -79,22 +79,22 @@ fun GlobalRecordRow(
                     .width(30.dp)
             )
 
-            gameUser.avatar?.let {
-//            NetworkImage()
-            } ?: run {
-                Box(
+//            gameUser.avatar?.let {
+////            NetworkImage()
+//            } ?: run {
+            Box(
+                modifier = Modifier
+                    .size(48.dp)
+                    .clip(CircleShape),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_unname_user),
+                    contentDescription = null,
                     modifier = Modifier
-                        .size(48.dp)
-                        .clip(CircleShape),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_unname_user),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(36.dp)
-                            .background(HTheme.colors.primaryWhite30, CircleShape)
-                            .padding(8.dp),
+                        .size(36.dp)
+                        .background(HTheme.colors.primaryWhite30, CircleShape)
+                        .padding(8.dp),
                         tint = HTheme.colors.primaryWhite
                     )
 
@@ -118,7 +118,7 @@ fun GlobalRecordRow(
                         foregroundColor = HTheme.colors.primaryWhite
                     )
                 }
-            }
+//            }
 
             Spacer(modifier = Modifier.width(8.dp))
             Column(

@@ -20,7 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.kocoukot.holdgame.compose.theme.HTheme
 import com.kocoukot.holdgame.core.R
-import com.kocoukot.holdgame.model.EndgameButtons
+import com.kocoukot.holdgame.domain.model.EndgameButtons
 
 
 @Composable

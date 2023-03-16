@@ -4,11 +4,11 @@ import androidx.lifecycle.viewModelScope
 import com.kocoukot.holdgame.core_mvi.BaseViewModel
 import com.kocoukot.holdgame.core_mvi.ComposeActions
 import com.kocoukot.holdgame.core_mvi.ReceiveEvent
-import com.kocoukot.holdgame.leaderboard_feature.domain.usecase.GetGlobalResultsUseCase
-import com.kocoukot.holdgame.leaderboard_feature.domain.usecase.GetUserMaxRecordUseCase
-import com.kocoukot.holdgame.leaderboard_feature.domain.usecase.GetUserResultsUseCase
+import com.kocoukot.holdgame.domain.model.LeaderboardModel
+import com.kocoukot.holdgame.domain.usecase.leaderboard.GetGlobalResultsUseCase
+import com.kocoukot.holdgame.domain.usecase.leaderboard.GetUserMaxRecordUseCase
+import com.kocoukot.holdgame.domain.usecase.leaderboard.GetUserResultsUseCase
 import com.kocoukot.holdgame.leaderboard_feature.model.LeaderboardActions
-import com.kocoukot.holdgame.leaderboard_feature.model.LeaderboardModel
 import com.kocoukot.holdgame.leaderboard_feature.model.LeaderboardRoute
 import com.kocoukot.holdgame.leaderboard_feature.model.LeaderboardState
 import kotlinx.coroutines.async
@@ -31,20 +31,22 @@ class LeaderboardViewModel(
             supervisorScope {
                 try {
                     val userResultsAsync = async { getUserLocalResultsUseCase() }
-                    val globalUsersAsync = async { getGlobalResultsUseCase() }
                     val userMaxRecordAsync = async { getUserMaxRecordUseCase() }
-                    updateInfo {
-                        copy(
-                            data = LeaderboardModel(
-                                personalRecords = userResultsAsync.await(),
-                                worldRecordRecords = globalUsersAsync.await(),
-                                localUSerRecord = userMaxRecordAsync.await(),
-                            )
-                        ).also {
-                            updateInfo { copy(isLoading = false) }
+
+
+                    getGlobalResultsUseCase { globalUsersAsync ->
+                        updateInfo {
+                            copy(
+                                data = LeaderboardModel(
+                                    personalRecords = userResultsAsync.await(),
+                                    worldRecordRecords = globalUsersAsync,
+                                    localUSerRecord = userMaxRecordAsync.await(),
+                                )
+                            ).also {
+                                updateInfo { copy(isLoading = false) }
+                            }
                         }
                     }
-
                 } catch (e: Exception) {
                     updateInfo {
                         copy(
