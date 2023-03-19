@@ -10,7 +10,7 @@ data class GameResult(
 ) : Parcelable {
 
     companion object {
-        fun from(map: Map<String, Any>) = object {
+        fun from(map: Map<String, Any?>) = object {
             val date: Long by map
             val result: Long by map
 

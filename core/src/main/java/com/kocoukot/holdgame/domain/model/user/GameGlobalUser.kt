@@ -12,11 +12,11 @@ data class GameGlobalUser(
 ) : Parcelable {
 
     companion object {
-        fun from(map: Map<String, Any>) = object {
+        fun from(map: Map<String, Any?>) = object {
             val id: String by map
             val avatar: String? by map
             val userName: String by map
-            val records = GameResult.from(map["records"] as Map<String, Any>)
+            val records = GameResult.from(map["records"] as Map<String, Any?>)
 
             val data = GameGlobalUser(id, avatar, userName, records)
         }.data

@@ -2,11 +2,11 @@ package com.kocoukot.holdgame.ui.button.model
 
 import com.android.billingclient.api.ProductDetails
 import com.kocoukot.holdgame.core_mvi.ComposeState
+import com.kocoukot.holdgame.domain.model.CouldContinueType
+import com.kocoukot.holdgame.domain.model.EndgameModel
+import com.kocoukot.holdgame.domain.model.GameState
 import com.kocoukot.holdgame.domain.model.user.GameUser
-import com.kocoukot.holdgame.ui.button.domain.CouldContinueType
-import com.kocoukot.holdgame.ui.button.domain.EndgameModel
 import com.kocoukot.holdgame.ui.button.domain.EndgameState
-import com.kocoukot.holdgame.ui.button.domain.GameState
 
 data class MainGameState(
     val errorText: String = "",

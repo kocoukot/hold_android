@@ -30,9 +30,9 @@ import androidx.compose.ui.unit.dp
 import com.kocoukot.holdgame.R
 import com.kocoukot.holdgame.compose.elements.NameInputContent
 import com.kocoukot.holdgame.compose.theme.HTheme
+import com.kocoukot.holdgame.domain.model.GameState
 import com.kocoukot.holdgame.ui.button.content.EndGameContent
 import com.kocoukot.holdgame.ui.button.content.MainGameContent
-import com.kocoukot.holdgame.ui.button.domain.GameState
 import com.kocoukot.holdgame.ui.button.model.ButtonActions
 import com.kocoukot.holdgame.ui.common.compose.DialogLoadingContent
 

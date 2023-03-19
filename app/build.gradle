@@ -1,3 +1,5 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
@@ -7,6 +9,12 @@ plugins {
     id 'com.google.firebase.crashlytics'
 }
 
+static String getKeystorePath() {
+    if (Os.isFamily(Os.FAMILY_WINDOWS)) return "c:/Keystore/hold.keystore"
+    if (Os.isFamily(Os.FAMILY_MAC)) return "${System.properties['user.home']}/Keystore/hold.keystore"
+    return System.getenv("HOLD_KEYSTORE_PATH")
+}
+
 def computeVersionName() {
     return "${rootProject.version_major}.${rootProject.version_minor}.${rootProject.version_patch}"
 }
@@ -14,7 +22,6 @@ def computeVersionName() {
 def computeVersionCode() {
     return rootProject.version_major * 10000 + rootProject.version_minor * 1000 + rootProject.version_patch * 100 + rootProject.build_number
 }
-
 
 
 android {
@@ -41,18 +48,19 @@ android {
 
 
         signingConfigs {
-//            default_config {
-//                try {
-//                    keyAlias props.getProperty("KEY_ALIAS")
-//                    keyPassword props.getProperty("KEY_PASSWORD")
-//                    storeFile file(getKeystorePath())
-//                    storePassword props.getProperty("KEYSTORE_PASSWORD")
-//                } catch (ignored) {
-//                    throw new InvalidUserDataException("You should define KEYSTORE_PASSWORD and KEY_PASSWORD in gradle.properties.")
-//                }
-//            }
+            default_config {
+                try {
+                    storePassword props.getProperty("KEYSTORE_PASSWORD")
+                    keyAlias props.getProperty("KEY_ALIAS")
+                    keyPassword props.getProperty("KEY_PASSWORD")
+                    storeFile file(getKeystorePath())
+                } catch (ignored) {
+                    throw new InvalidUserDataException("You should define KEYSTORE_PASSWORD and KEY_PASSWORD in gradle.properties.")
+                }
+            }
         }
 
+//        SigningConfig "default_config" is missing required property "storePassword".
 
     }
 
@@ -70,7 +78,7 @@ android {
         release {
             minifyEnabled true
             debuggable false
-//            signingConfig signingConfigs.default_config
+            signingConfig signingConfigs.default_config
 
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }

@@ -22,7 +22,7 @@ import com.kocoukot.holdgame.compose.theme.HTheme
 import com.kocoukot.holdgame.compose.theme.movementSpec
 import com.kocoukot.holdgame.compose.theme.transformationSpec
 import com.kocoukot.holdgame.domain.model.EndgameButtons
-import com.kocoukot.holdgame.ui.button.domain.EndgameModel
+import com.kocoukot.holdgame.domain.model.EndgameModel
 import com.kocoukot.holdgame.ui.button.domain.EndgameState
 import com.kocoukot.holdgame.ui.button.model.ButtonActions
 import com.skydoves.orbitary.Orbitary

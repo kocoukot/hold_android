@@ -1,4 +1,4 @@
-package com.kocoukot.holdgame.ui.button.domain
+package com.kocoukot.holdgame.domain.model
 
 
 enum class CouldContinueType {

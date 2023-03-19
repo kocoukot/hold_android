@@ -36,7 +36,7 @@ class AccountRepositoryImpl(
                 firestoreDb.collection("results")
                     .document(gameUser.id)
                     .set(gameUser.toGlobalUser())
-                    .addOnSuccessListener { document ->
+                    .addOnSuccessListener { _ ->
                         Timber.tag("hold_tag").d("document added")
                     }
                     .addOnFailureListener { exception ->
@@ -52,7 +52,8 @@ class AccountRepositoryImpl(
         accountStorage.apply {
             setNewResult(result)
             getUserName()?.let { gameUser ->
-                val sendResult = gameUser.toGlobalUser()
+
+            val sendResult = gameUser.toGlobalUser()
 
                 firestoreDb.collection("results")
                     .document(gameUser.id)
